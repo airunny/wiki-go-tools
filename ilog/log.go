@@ -121,7 +121,6 @@ func (l *logger) Log(level log.Level, keyvals ...interface{}) error {
 		)
 
 		if value == "" {
-			fmt.Println("这里的内容为空：", key, value)
 			continue
 		}
 
