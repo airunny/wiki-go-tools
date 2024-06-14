@@ -1,7 +1,6 @@
 package ilog
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"net"
@@ -25,21 +24,15 @@ type logger struct {
 	*zap.SugaredLogger
 }
 
-type Helper struct {
-	helper *log.Helper
-	global *zap.SugaredLogger
+type closer struct {
+	sugar *zap.SugaredLogger
 }
 
-func (h *Helper) Log(level log.Level, keyvals ...interface{}) error {
-	h.helper.Log(level, keyvals...)
-	return nil
+func (c *closer) Close() error {
+	return c.sugar.Sync()
 }
 
-func (h *Helper) Close() {
-	_ = h.global.Sync()
-}
-
-func NewLogger(id, name string, opts ...Option) *Helper {
+func NewLogger(id, name string, opts ...Option) (log.Logger, io.Closer) {
 	o := &options{}
 	for _, opt := range opts {
 		opt(o)
@@ -75,9 +68,7 @@ func NewLogger(id, name string, opts ...Option) *Helper {
 		core         = zapcore.NewCore(encoder, zapcore.AddSync(writer), zapcore.DebugLevel)
 		globalZapLog = zap.New(
 			core,
-			//zap.AddCaller(),
 			zap.AddStacktrace(zap.ErrorLevel),
-			//zap.AddCallerSkip(0),
 		)
 	)
 
@@ -88,7 +79,6 @@ func NewLogger(id, name string, opts ...Option) *Helper {
 			"service_name", name,
 			"trace_id", tracing.TraceID(),
 			"span_id", tracing.SpanID(),
-			//"caller", log.Caller(6),
 		}
 	)
 	kvs = append(kvs, icontext.LoggerValues()...)
@@ -96,11 +86,9 @@ func NewLogger(id, name string, opts ...Option) *Helper {
 	ll := log.With(&logger{
 		SugaredLogger: globalSugarLogger,
 	}, kvs...)
-	log.SetLogger(ll)
 
-	return &Helper{
-		helper: log.Context(context.Background()),
-		global: globalSugarLogger,
+	return ll, &closer{
+		sugar: globalSugarLogger,
 	}
 }
 
