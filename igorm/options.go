@@ -20,13 +20,14 @@ func WithTransaction(tx *gorm.DB) Option {
 	}
 }
 
-func NewOptions(opts ...Option) *Options {
+func NewOptions(tx *gorm.DB, opts ...Option) *Options {
 	o := &Options{
-		tx: globalGORM,
+		tx: tx,
 	}
 
 	for _, opt := range opts {
 		opt(o)
 	}
+
 	return o
 }

@@ -3,18 +3,13 @@ package igorm
 import (
 	"context"
 	"crypto/tls"
-	"crypto/x509"
 	"database/sql"
-	"database/sql/driver"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
-	"reflect"
+	"io"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
-	dmysql "github.com/go-sql-driver/mysql"
 	opentracing "github.com/opentracing/opentracing-go"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -30,7 +25,6 @@ type dbDurationKey struct{}
 
 const (
 	traceOperationName = "GORM"
-	sourceFormat       = "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true&loc=Local%v"
 )
 
 var (
@@ -54,11 +48,6 @@ type (
 		CaPath             string        `json:"ca_path" yaml:"caPath"`
 		TLSConfig          *tls.Config   `json:"tls_config" yaml:"tlsConfig"`
 		Source             string        `json:"source" yaml:"source"`
-	}
-
-	DB struct {
-		orm *gorm.DB
-		db  *sql.DB
 	}
 )
 
@@ -101,32 +90,17 @@ func After(db *gorm.DB) {
 		opentracing.ChildOf(parentSpan.Context())).Finish()
 }
 
-func NewGORM(c *Config, log log.Logger) (*DB, error) {
+func NewGORM(c *Config, log log.Logger) (*gorm.DB, io.Closer, error) {
 	var (
 		err    error
 		source = c.Source
 	)
 
 	if source == "" {
-		useSsl := ""
-		if len(c.CaPath) > 0 {
-			var sslCfg *tls.Config
-			sslCfg, err = GenTLSConfig(c.CaPath)
-			if err != nil {
-				return nil, err
-			}
-
-			_ = dmysql.RegisterTLSConfig("custom", sslCfg)
-			useSsl = "&tls=custom"
-		}
-		source = fmt.Sprintf(sourceFormat, c.User, c.Password, c.Domain, c.Port, c.Database, useSsl)
+		return nil, nil, fmt.Errorf("empty db source")
 	}
 
-	if source == "" {
-		return nil, fmt.Errorf("empty db source")
-	}
-
-	orm, err := gorm.Open(mysql.Open(source), &gorm.Config{
+	db, err := gorm.Open(mysql.Open(source), &gorm.Config{
 		Logger:                                   newLogger(log, gormlogger.LogLevel(c.LogLevel)),
 		SkipDefaultTransaction:                   true,
 		QueryFields:                              c.DisableQueryFields,
@@ -137,61 +111,61 @@ func NewGORM(c *Config, log log.Logger) (*DB, error) {
 		},
 	})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	err = orm.Callback().Create().Before("gorm:create").Register("create", Before)
+	err = db.Callback().Create().Before("gorm:create").Register("create", Before)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	err = orm.Callback().Delete().Before("gorm:delete").Register("delete", Before)
+	err = db.Callback().Delete().Before("gorm:delete").Register("delete", Before)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	err = orm.Callback().Update().Before("gorm:update").Register("update", Before)
+	err = db.Callback().Update().Before("gorm:update").Register("update", Before)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	err = orm.Callback().Query().Before("gorm:query").Register("query", Before)
+	err = db.Callback().Query().Before("gorm:query").Register("query", Before)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	err = orm.Callback().Row().Before("gorm:row").Register("row", Before)
+	err = db.Callback().Row().Before("gorm:row").Register("row", Before)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	err = orm.Callback().Create().After("gorm:create").Register("create_after", After)
+	err = db.Callback().Create().After("gorm:create").Register("create_after", After)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	err = orm.Callback().Delete().After("gorm:delete").Register("delete_after", After)
+	err = db.Callback().Delete().After("gorm:delete").Register("delete_after", After)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	err = orm.Callback().Delete().After("gorm:update").Register("update_after", After)
+	err = db.Callback().Delete().After("gorm:update").Register("update_after", After)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	err = orm.Callback().Query().After("gorm:query").Register("query_after", After)
+	err = db.Callback().Query().After("gorm:query").Register("query_after", After)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	err = orm.Callback().Row().After("gorm:row").Register("raw_after", After)
+	err = db.Callback().Row().After("gorm:row").Register("raw_after", After)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
-	ormDB, err := orm.DB()
+	sqldb, err := db.DB()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	err = ormDB.PingContext(ctx)
+	err = sqldb.PingContext(ctx)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if c.MaxOpen <= 0 {
@@ -202,97 +176,9 @@ func NewGORM(c *Config, log log.Logger) (*DB, error) {
 		c.MaxIdle = 10
 	}
 
-	ormDB.SetMaxOpenConns(c.MaxOpen)
-	ormDB.SetMaxIdleConns(c.MaxIdle)
-	ormDB.SetConnMaxLifetime(c.MaxLifeTime)
+	sqldb.SetMaxOpenConns(c.MaxOpen)
+	sqldb.SetMaxIdleConns(c.MaxIdle)
+	sqldb.SetConnMaxLifetime(c.MaxLifeTime)
 
-	globalDB = ormDB
-	globalGORM = orm
-	return &DB{
-		orm: orm,
-		db:  ormDB,
-	}, nil
-}
-
-func (d *DB) Close() error {
-	if d.db != nil {
-		return d.db.Close()
-	}
-	return nil
-}
-
-func (d *DB) Session() *gorm.DB {
-	return d.orm
-}
-
-func (d *DB) NewOptions(opts ...Option) *Options {
-	o := &Options{
-		tx: d.orm,
-	}
-
-	for _, opt := range opts {
-		opt(o)
-	}
-	return o
-}
-
-func (d *DB) Begin(opts ...*sql.TxOptions) *gorm.DB {
-	return d.orm.Begin(opts...)
-}
-
-func GenTLSConfig(caCertFile string) (*tls.Config, error) {
-	caCert, err := os.ReadFile(caCertFile)
-	if err != nil {
-		return nil, err
-	}
-
-	pool := x509.NewCertPool()
-	pool.AppendCertsFromPEM(caCert)
-	return &tls.Config{
-		RootCAs:            pool,
-		InsecureSkipVerify: true,
-	}, nil
-}
-
-func typeFromModel(model interface{}) reflect.Type {
-	typ := reflect.TypeOf(model)
-	if typ.Kind() == reflect.Ptr {
-		typ = typ.Elem()
-	}
-	return typ
-}
-
-func GormCustomValue(in interface{}) (driver.Value, error) {
-	if in == nil {
-		return "", nil
-	}
-
-	str, _ := json.Marshal(in)
-	return string(str), nil
-}
-
-func GormCustomScan(target, value interface{}) error {
-	if target == nil || value == nil {
-		target = reflect.New(typeFromModel(target)).Interface()
-		return nil
-	}
-
-	var bytes []byte
-	switch v := value.(type) {
-	case []byte:
-		if len(v) > 0 {
-			bytes = make([]byte, len(v))
-			copy(bytes, v)
-		}
-	case string:
-		bytes = []byte(v)
-	default:
-		bytes = []byte("{}")
-	}
-
-	if bytes == nil || len(bytes) <= 0 {
-		bytes = []byte("{}")
-	}
-
-	return json.Unmarshal(bytes, target)
+	return db, sqldb, nil
 }
