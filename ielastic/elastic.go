@@ -15,7 +15,7 @@ func NewElastic(c *Config) (*elastic.Client, error) {
 		elastic.SetURL(c.Source),
 		elastic.SetBasicAuth(c.Username, c.Password),
 		elastic.SetSniff(c.Sniff),
-		elastic.SetInfoLog(NewLogWithLevel(LogLevelInfo)),
+		//elastic.SetInfoLog(NewLogWithLevel(LogLevelInfo)),
 		elastic.SetErrorLog(NewLogWithLevel(LogLevelError)),
 		//elastic.SetTraceLog(NewLogWithLevel(LogLevelTrace)),
 		elastic.SetGzip(true),
