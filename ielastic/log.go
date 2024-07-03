@@ -24,7 +24,7 @@ func (l *Log) Printf(format string, v ...interface{}) {
 	case LogLevelTrace:
 		log.Infof(format, v...)
 	default:
-		log.Infof(format, v...)
+		//log.Infof(format, v...)
 	}
 }
 
