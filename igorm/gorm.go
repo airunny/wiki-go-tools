@@ -4,9 +4,12 @@ import (
 	"context"
 	"crypto/tls"
 	"database/sql"
+	"database/sql/driver"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"reflect"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -181,4 +184,47 @@ func NewGORM(c *Config, log log.Logger) (*gorm.DB, io.Closer, error) {
 	sqldb.SetConnMaxLifetime(c.MaxLifeTime)
 
 	return db, sqldb, nil
+}
+
+func typeFromModel(model interface{}) reflect.Type {
+	typ := reflect.TypeOf(model)
+	if typ.Kind() == reflect.Ptr {
+		typ = typ.Elem()
+	}
+	return typ
+}
+
+func GormCustomValue(in interface{}) (driver.Value, error) {
+	if in == nil {
+		return "", nil
+	}
+
+	str, _ := json.Marshal(in)
+	return string(str), nil
+}
+
+func GormCustomScan(target, value interface{}) error {
+	if target == nil || value == nil {
+		target = reflect.New(typeFromModel(target)).Interface()
+		return nil
+	}
+
+	var bytes []byte
+	switch v := value.(type) {
+	case []byte:
+		if len(v) > 0 {
+			bytes = make([]byte, len(v))
+			copy(bytes, v)
+		}
+	case string:
+		bytes = []byte(v)
+	default:
+		bytes = []byte("{}")
+	}
+
+	if bytes == nil || len(bytes) <= 0 {
+		bytes = []byte("{}")
+	}
+
+	return json.Unmarshal(bytes, target)
 }
