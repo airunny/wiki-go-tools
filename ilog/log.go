@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	k8sJsonLogPath = "./jsonlog/%s"
+	k8sJsonLogPath = "/var/jsonlog/%s"
 )
 
 type logger struct {
