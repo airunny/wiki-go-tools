@@ -130,11 +130,11 @@ func ResponseEncoder(w http.ResponseWriter, r *stdHttp.Request, v interface{}) e
 		return nil
 	}
 
-	if rd, ok := v.(http.Redirector); ok {
-		url, code := rd.Redirect()
-		stdHttp.Redirect(w, r, url, code)
-		return nil
-	}
+	//if rd, ok := v.(http.Redirector); ok {
+	//	url, code := rd.Redirect()
+	//	stdHttp.Redirect(w, r, url, code)
+	//	return nil
+	//}
 
 	if res, ok := v.(TextPlainReply); ok {
 		w.Header().Set("Content-Type", iheader.ResponseContentTextType)
