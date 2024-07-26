@@ -128,9 +128,9 @@ func newTrace(exporter tracesdk.SpanExporter, o *options) (trace.TracerProvider,
 	}
 
 	if len(attrs) > 0 {
-		tracesdk.WithResource(resource.NewSchemaless(
+		providerOptions = append(providerOptions, tracesdk.WithResource(resource.NewSchemaless(
 			attrs...,
-		))
+		)))
 	}
 
 	tp := tracesdk.NewTracerProvider(providerOptions...)
