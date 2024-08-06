@@ -266,7 +266,8 @@ var (
 		"ZM": "894",
 		"ZW": "716",
 	}
-	threeCharCodeToCountryCodeMapping = map[string]string{"AND": "020",
+	threeCharCodeToCountryCodeMapping = map[string]string{
+		"AND": "020",
 		"ARE": "784",
 		"AFG": "004",
 		"ATG": "028",
@@ -1014,6 +1015,31 @@ var (
 		"036": "60414278",
 		"554": "60414278",
 	}
+	areaNameMapping = map[string]string{
+		"12398727": "泰国区",
+		"13264857": "尼日利亚",
+		"14481060": "台湾区",
+		"22923473": "非洲区",
+		"26731356": "香港区",
+		"28942458": "菲律宾区",
+		"29406706": "印尼区",
+		"33873452": "大洋洲",
+		"36431431": "越南区",
+		"38153014": "柬埔寨",
+		"45030053": "美洲",
+		"47292932": "东南亚区",
+		"54649693": "香港区（废弃）",
+		"55196440": "新加坡区",
+		"56780894": "韩国地区",
+		"60414278": "澳新区",
+		"65998117": "西亚区",
+		"66006232": "欧洲",
+		"85830918": "日本地区",
+		"91405248": "马来区",
+		"93011566": "南亚区",
+		"93609133": "其他区",
+		"999":      "全球",
+	}
 )
 
 // GetAreaCodeByCode 同时兼容 二字码、三字码、CountryCode
@@ -1031,7 +1057,11 @@ func GetAreaCodeByCode(code string) string {
 	}
 
 	// 根据三字码获取
-	return countryAreaMapping[threeCharCodeToCountryCodeMapping[strings.ToUpper(code)]]
+	out, ok = countryAreaMapping[threeCharCodeToCountryCodeMapping[strings.ToUpper(code)]]
+	if ok {
+		return out
+	}
+	return "93609133"
 }
 
 // GetCountryByCode 同时兼容 二字码、三字码、CountryCode
@@ -1048,4 +1078,13 @@ func GetCountryByCode(code string) (*Country, bool) {
 
 	out, ok = countryCodeMapping[threeCharCodeToCountryCodeMapping[strings.ToUpper(code)]]
 	return out, ok
+}
+
+func GetAreaNameByAreaCode(code string) string {
+	out, ok := areaNameMapping[code]
+	if ok {
+		return out
+	}
+
+	return "其他区"
 }

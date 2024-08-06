@@ -18,3 +18,16 @@ func TestGetAreaCodeByCode(t *testing.T) {
 		}
 	}
 }
+
+func TestGetCountryByCode(t *testing.T) {
+	fmt.Println(GetAreaCodeByCode("156"))
+}
+
+func TestGetAreaNameByAreaCode(t *testing.T) {
+	m := make(map[string]struct{})
+	for _, areaCode := range countryAreaMapping {
+		m[areaCode] = struct{}{}
+	}
+
+	fmt.Println("总区域熟练：", len(m))
+}
