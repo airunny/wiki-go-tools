@@ -23,7 +23,7 @@ const (
 	twoAreaCodeKey           = "x-md-global-two-area-code"
 	requestIdKey             = "x-md-global-request-id"
 	basicDataKey             = "x-md-global-basic-data"
-	deviceIdKey              = "x-md-global-basic-data"
+	deviceIdKey              = "x-md-global-device-id"
 )
 
 type Platform string
