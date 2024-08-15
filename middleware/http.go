@@ -4,6 +4,8 @@ import (
 	"context"
 	stdHttp "net/http"
 
+	"github.com/airunny/wiki-go-tools/country"
+
 	"github.com/airunny/wiki-go-tools/icontext"
 	"github.com/airunny/wiki-go-tools/iheader"
 	"github.com/airunny/wiki-go-tools/reqid"
@@ -98,20 +100,16 @@ func TryParseHeader(opts ...Option) middleware.Middleware {
 			countryCode := iheader.GetCountryCode(header)
 			ctx = icontext.WithCountryCode(ctx, countryCode)
 
-			if countryCode != "" && o.convert != nil {
-				areaCode, err := o.convert.AreaCode(ctx, countryCode)
-				if err != nil {
-					return nil, err
-				}
+			if countryCode != "" {
 				// 区域码
-				ctx = icontext.WithAreaCode(ctx, areaCode)
-
-				twoAreaCode, err := o.convert.TwoAreaCode(ctx, countryCode)
-				if err != nil {
-					return nil, err
-				}
-				// 二字区域码
-				ctx = icontext.WithTwoAreaCode(ctx, twoAreaCode)
+				ctx = icontext.WithAreaCode(ctx, country.GetAreaCodeByCode(countryCode))
+				//
+				//twoAreaCode, err := o.convert.TwoAreaCode(ctx, countryCode)
+				//if err != nil {
+				//	return nil, err
+				//}
+				//// 二字区域码
+				//ctx = icontext.WithTwoAreaCode(ctx, twoAreaCode)
 			}
 
 			// 语言code
