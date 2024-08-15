@@ -90,10 +90,10 @@ func TryParseHeader(opts ...Option) middleware.Middleware {
 			ctx = icontext.WithAppPlatform(ctx, icontext.Platform(baseFunc(iheader.PlatformHeaderKey)))
 			// app id
 			ctx = icontext.WithAppId(ctx, baseFunc(iheader.AppIdHeaderKey))
-			// 类型
-			ctx = icontext.WithProjectType(ctx, baseFunc(iheader.ProjectTypeHeaderKey))
 			//  version
 			ctx = icontext.WithAppVersion(ctx, baseFunc(iheader.AppVersionHeaderKey))
+			// device_id
+			ctx = icontext.WithDeviceId(ctx, baseFunc(iheader.DeviceIdHeaderKey))
 			// 城市码
 			countryCode := iheader.GetCountryCode(header)
 			ctx = icontext.WithCountryCode(ctx, countryCode)

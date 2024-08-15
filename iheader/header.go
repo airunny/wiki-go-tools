@@ -28,6 +28,7 @@ const (
 	PlatformHeaderKey             = "X-Platform"                // 平台
 	AuthorizationHeaderKey        = "Authorization"             // 权限验证key
 	AppIdHeaderKey                = "X-App-Id"                  // app_id
+	DeviceIdHeaderKey             = "X-Device-Id"               // 设备唯一标识
 )
 
 func GetToken(h transport.Header) string {
@@ -124,6 +125,10 @@ func ParseBasicData(h transport.Header) func(key string) string {
 
 	if len(splits) > 3 {
 		mapping[AppVersionHeaderKey] = splits[3]
+	}
+
+	if len(splits) > 5 {
+		mapping[DeviceIdHeaderKey] = splits[5]
 	}
 
 	return func(key string) string {

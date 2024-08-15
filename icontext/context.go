@@ -23,6 +23,7 @@ const (
 	twoAreaCodeKey           = "x-md-global-two-area-code"
 	requestIdKey             = "x-md-global-request-id"
 	basicDataKey             = "x-md-global-basic-data"
+	deviceIdKey              = "x-md-global-basic-data"
 )
 
 type Platform string
@@ -63,6 +64,16 @@ func WithBasicData(ctx context.Context, in string) context.Context {
 
 func BasicDataFrom(ctx context.Context) (string, bool) {
 	return fromValue(ctx, basicDataKey)
+}
+
+// device id
+
+func WithDeviceId(ctx context.Context, in string) context.Context {
+	return withValue(ctx, deviceIdKey, in)
+}
+
+func DeviceIdFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, deviceIdKey)
 }
 
 // 后台用户ID
