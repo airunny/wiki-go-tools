@@ -82,6 +82,8 @@ func TryParseHeader(opts ...Option) middleware.Middleware {
 			ctx = icontext.WithClientIP(ctx, iheader.GetClientIp(header))
 			// 用户ID
 			ctx = icontext.WithUserId(ctx, iheader.GetUserId(header))
+			// basic data
+			ctx = icontext.WithBasicData(ctx, iheader.GetBasicData(header))
 
 			baseFunc := iheader.ParseBasicData(header)
 			// 平台

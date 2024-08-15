@@ -93,6 +93,10 @@ func GetAuthorization(h transport.Header) string {
 	return h.Get(AuthorizationHeaderKey)
 }
 
+func GetBasicData(h transport.Header) string {
+	return h.Get(BasicDataHeaderKey)
+}
+
 func ParseBasicData(h transport.Header) func(key string) string {
 	out := h.Get(BasicDataHeaderKey)
 	if out == "" {

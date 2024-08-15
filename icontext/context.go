@@ -22,6 +22,7 @@ const (
 	areaCodeKey              = "x-md-global-area-code"
 	twoAreaCodeKey           = "x-md-global-two-area-code"
 	requestIdKey             = "x-md-global-request-id"
+	basicDataKey             = "x-md-global-basic-data"
 )
 
 type Platform string
@@ -54,17 +55,20 @@ func fromValue(ctx context.Context, key string) (string, bool) {
 	return out, out != ""
 }
 
+// basic data
+
+func WithBasicData(ctx context.Context, in string) context.Context {
+	return withValue(ctx, basicDataKey, in)
+}
+
+func BasicDataFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, basicDataKey)
+}
+
 // 后台用户ID
 
 func WithAccountID(ctx context.Context, in string) context.Context {
-	md, ok := metadata.FromServerContext(ctx)
-	if !ok {
-		md = metadata.Metadata{}
-	}
-	md.Set(accountIDKey, in)
-	ctx = metadata.NewServerContext(ctx, md)
-
-	return metadata.AppendToClientContext(ctx, accountIDKey, in)
+	return withValue(ctx, accountIDKey, in)
 }
 
 func AccountIDFrom(ctx context.Context) (string, bool) {
