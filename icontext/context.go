@@ -222,13 +222,17 @@ func RequestIdFrom(ctx context.Context) (string, bool) {
 
 func LoggerValues() []interface{} {
 	return []interface{}{
+		"user_id", log.Valuer(func(ctx context.Context) interface{} {
+			userId, _ := UserIdFrom(ctx)
+			return userId
+		}),
 		"request_id", log.Valuer(func(ctx context.Context) interface{} {
 			reqId, _ := RequestIdFrom(ctx)
 			return reqId
 		}),
-		"two_area_code", log.Valuer(func(ctx context.Context) interface{} {
-			twoAreaCode, _ := TwoAreaCodeFrom(ctx)
-			return twoAreaCode
+		"area_code", log.Valuer(func(ctx context.Context) interface{} {
+			areaCode, _ := AreaCodeFrom(ctx)
+			return areaCode
 		}),
 		"language_code", log.Valuer(func(ctx context.Context) interface{} {
 			langCode, _ := LanguageCodeFrom(ctx)
@@ -237,6 +241,18 @@ func LoggerValues() []interface{} {
 		"country_code", log.Valuer(func(ctx context.Context) interface{} {
 			countryCode, _ := CountryCodeFrom(ctx)
 			return countryCode
+		}),
+		"preferred_language_code", log.Valuer(func(ctx context.Context) interface{} {
+			preferredLanguageCode, _ := PreferredLanguageCodeFrom(ctx)
+			return preferredLanguageCode
+		}),
+		"basic_data", log.Valuer(func(ctx context.Context) interface{} {
+			basicData, _ := BasicDataFrom(ctx)
+			return basicData
+		}),
+		"platform", log.Valuer(func(ctx context.Context) interface{} {
+			platform, _ := PlatformFrom(ctx)
+			return platform
 		}),
 	}
 }
