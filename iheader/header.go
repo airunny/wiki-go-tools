@@ -23,11 +23,11 @@ const (
 	BasicDataHeaderKey            = "Basicdata"                 // 其他信息
 	PreferredLanguageHeaderKeyOld = "Preferredlanguagecode"     // 偏好语言，后续使用 X-Preferred-Language-Code 代替
 	PreferredLanguageHeaderKey    = "X-Preferred-Language-Code" // 偏好语言
-	VersionHeaderKey              = "X-Version"                 // 版本号
+	DeviceVersionHeaderKey        = "X-Device-Version"          // 设备版本号
+	AppVersionHeaderKey           = "X-Version"                 // app版本号
 	PlatformHeaderKey             = "X-Platform"                // 平台
 	AuthorizationHeaderKey        = "Authorization"             // 权限验证key
 	AppIdHeaderKey                = "X-App-Id"                  // app_id
-	ProjectTypeHeaderKey          = "X-Project-Type"            // 项目类型
 )
 
 func GetToken(h transport.Header) string {
@@ -115,15 +115,15 @@ func ParseBasicData(h transport.Header) func(key string) string {
 	}
 
 	if len(splits) > 1 {
-		mapping[AppIdHeaderKey] = splits[1]
+		mapping[DeviceVersionHeaderKey] = splits[1]
 	}
 
 	if len(splits) > 2 {
-		mapping[ProjectTypeHeaderKey] = splits[2]
+		mapping[AppIdHeaderKey] = splits[2]
 	}
 
 	if len(splits) > 3 {
-		mapping[VersionHeaderKey] = splits[3]
+		mapping[AppVersionHeaderKey] = splits[3]
 	}
 
 	return func(key string) string {
@@ -155,13 +155,8 @@ func GetPlatform(h transport.Header) string {
 	return ""
 }
 
-func GetAppId(h transport.Header) string {
-	out := h.Get(AppIdHeaderKey)
-	if out != "" {
-		return out
-	}
-
-	out = h.Get(BasicDataHeaderKey)
+func GetDeviceVersion(h transport.Header) string {
+	out := h.Get(BasicDataHeaderKey)
 	if out == "" {
 		return ""
 	}
@@ -174,8 +169,8 @@ func GetAppId(h transport.Header) string {
 	return ""
 }
 
-func GetProjectType(h transport.Header) string {
-	out := h.Get(ProjectTypeHeaderKey)
+func GetAppId(h transport.Header) string {
+	out := h.Get(AppIdHeaderKey)
 	if out != "" {
 		return out
 	}
@@ -193,8 +188,27 @@ func GetProjectType(h transport.Header) string {
 	return ""
 }
 
+func GetAppVersion(h transport.Header) string {
+	out := h.Get(AppVersionHeaderKey)
+	if out != "" {
+		return out
+	}
+
+	out = h.Get(BasicDataHeaderKey)
+	if out == "" {
+		return ""
+	}
+
+	splits := strings.Split(out, ",")
+	if len(splits) > 3 {
+		return splits[3]
+	}
+
+	return ""
+}
+
 func GetVersion(h transport.Header) string {
-	out := h.Get(VersionHeaderKey)
+	out := h.Get(AppVersionHeaderKey)
 	if out != "" {
 		return out
 	}

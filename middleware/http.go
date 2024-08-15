@@ -93,7 +93,7 @@ func TryParseHeader(opts ...Option) middleware.Middleware {
 			// 类型
 			ctx = icontext.WithProjectType(ctx, baseFunc(iheader.ProjectTypeHeaderKey))
 			//  version
-			ctx = icontext.WithAppVersion(ctx, baseFunc(iheader.VersionHeaderKey))
+			ctx = icontext.WithAppVersion(ctx, baseFunc(iheader.AppVersionHeaderKey))
 			// 城市码
 			countryCode := iheader.GetCountryCode(header)
 			ctx = icontext.WithCountryCode(ctx, countryCode)
