@@ -26,9 +26,13 @@ const (
 	DeviceVersionHeaderKey        = "X-Device-Version"          // 设备版本号
 	AppVersionHeaderKey           = "X-Version"                 // app版本号
 	PlatformHeaderKey             = "X-Platform"                // 平台
-	AuthorizationHeaderKey        = "Authorization"             // 权限验证key
 	AppIdHeaderKey                = "X-App-Id"                  // app_id
 	DeviceIdHeaderKey             = "X-Device-Id"               // 设备唯一标识
+	WikiDataCenterRequestIdKey    = "Wikidatacenter-Request-Id" // req id
+	SceneCodeKey                  = "SceneCode"                 // scene code
+	WikiChannelKey                = "wikichannel"               // wiki channel
+	WscKey                        = "wsc"                       // wsc
+	ApphpgverKey                  = "apphpgver"
 )
 
 func GetToken(h transport.Header) string {
@@ -89,9 +93,20 @@ func GetPreferredLanguageCode(h transport.Header) string {
 
 	return h.Get(PreferredLanguageHeaderKeyOld)
 }
-
-func GetAuthorization(h transport.Header) string {
-	return h.Get(AuthorizationHeaderKey)
+func GetWikiDataCenterRequestId(h transport.Header) string {
+	return h.Get(WikiDataCenterRequestIdKey)
+}
+func GetSceneCode(h transport.Header) string {
+	return h.Get(SceneCodeKey)
+}
+func GetWikiChannel(h transport.Header) string {
+	return h.Get(WikiChannelKey)
+}
+func GetWSC(h transport.Header) string {
+	return h.Get(WscKey)
+}
+func GetAppHPGVer(h transport.Header) string {
+	return h.Get(ApphpgverKey)
 }
 
 func GetBasicData(h transport.Header) string {
@@ -212,20 +227,20 @@ func GetAppVersion(h transport.Header) string {
 	return ""
 }
 
-func GetVersion(h transport.Header) string {
-	out := h.Get(AppVersionHeaderKey)
+func GetDeviceId(h transport.Header) string {
+	out := h.Get(DeviceIdHeaderKey)
 	if out != "" {
 		return out
 	}
 
-	out = h.Get(BasicDataHeaderKey)
+	out = h.Get(DeviceIdHeaderKey)
 	if out == "" {
 		return ""
 	}
 
 	splits := strings.Split(out, ",")
-	if len(splits) > 3 {
-		return splits[3]
+	if len(splits) > 5 {
+		return splits[5]
 	}
 
 	return ""

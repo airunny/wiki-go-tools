@@ -5,7 +5,6 @@ import (
 	stdHttp "net/http"
 
 	"github.com/airunny/wiki-go-tools/country"
-
 	"github.com/airunny/wiki-go-tools/icontext"
 	"github.com/airunny/wiki-go-tools/iheader"
 	"github.com/airunny/wiki-go-tools/reqid"
@@ -86,7 +85,25 @@ func TryParseHeader(opts ...Option) middleware.Middleware {
 			ctx = icontext.WithUserId(ctx, iheader.GetUserId(header))
 			// basic data
 			ctx = icontext.WithBasicData(ctx, iheader.GetBasicData(header))
+			// 城市码
+			countryCode := iheader.GetCountryCode(header)
+			ctx = icontext.WithCountryCode(ctx, countryCode)
+			// 语言code
+			ctx = icontext.WithLanguageCode(ctx, iheader.GetLanguageCode(header))
+			// 偏好语言
+			ctx = icontext.WithPreferredLanguageCode(ctx, iheader.GetPreferredLanguageCode(header))
+			// wiki data center Request-Id
+			ctx = icontext.WithWikiDataCenterRequestId(ctx, iheader.GetWikiDataCenterRequestId(header))
+			// scene code
+			ctx = icontext.WithSceneCode(ctx, iheader.GetSceneCode(header))
+			// wiki channel
+			ctx = icontext.WithWikiChannel(ctx, iheader.GetWikiChannel(header))
+			// wsc
+			ctx = icontext.WithWSC(ctx, iheader.GetWSC(header))
+			// app hpg ver
+			ctx = icontext.WithAPPHPGVer(ctx, iheader.GetAppHPGVer(header))
 
+			// 从basic data中解析内容
 			baseFunc := iheader.ParseBasicData(header)
 			// 平台
 			ctx = icontext.WithAppPlatform(ctx, icontext.Platform(baseFunc(iheader.PlatformHeaderKey)))
@@ -96,30 +113,10 @@ func TryParseHeader(opts ...Option) middleware.Middleware {
 			ctx = icontext.WithAppVersion(ctx, baseFunc(iheader.AppVersionHeaderKey))
 			// device_id
 			ctx = icontext.WithDeviceId(ctx, baseFunc(iheader.DeviceIdHeaderKey))
-			// 城市码
-			countryCode := iheader.GetCountryCode(header)
-			ctx = icontext.WithCountryCode(ctx, countryCode)
-
+			// 区域码
 			if countryCode != "" {
-				// 区域码
 				ctx = icontext.WithAreaCode(ctx, country.GetAreaCodeByCode(countryCode))
-				//
-				//twoAreaCode, err := o.convert.TwoAreaCode(ctx, countryCode)
-				//if err != nil {
-				//	return nil, err
-				//}
-				//// 二字区域码
-				//ctx = icontext.WithTwoAreaCode(ctx, twoAreaCode)
 			}
-
-			// 语言code
-			languageCode := iheader.GetLanguageCode(header)
-			if languageCode == "zh" {
-				languageCode = "zh-HK"
-			}
-			ctx = icontext.WithLanguageCode(ctx, languageCode)
-			// 偏好语言
-			ctx = icontext.WithPreferredLanguageCode(ctx, iheader.GetPreferredLanguageCode(header))
 			return handler(ctx, req)
 		}
 	}
@@ -130,11 +127,11 @@ func ResponseEncoder(w http.ResponseWriter, r *stdHttp.Request, v interface{}) e
 		return nil
 	}
 
-	//if rd, ok := v.(http.Redirector); ok {
-	//	url, code := rd.Redirect()
-	//	stdHttp.Redirect(w, r, url, code)
-	//	return nil
-	//}
+	if rd, ok := v.(http.Redirector); ok {
+		url, code := rd.Redirect()
+		stdHttp.Redirect(w, r, url, code)
+		return nil
+	}
 
 	if res, ok := v.(TextPlainReply); ok {
 		w.Header().Set("Content-Type", iheader.ResponseContentTextType)

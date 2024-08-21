@@ -8,22 +8,23 @@ import (
 )
 
 const (
-	accountIDKey             = "x-md-global-account-id"
-	accountNameKey           = "x-md-global-account-name"
-	clientIP                 = "x-md-global-client-ip"
-	appVersionKey            = "x-md-global-app-version"
-	platformKey              = "x-md-global-platform"
-	userIdKey                = "x-md-global-user-id"
-	languageCodeKey          = "x-md-global-language-code"
-	countryCodeKey           = "x-md-global-country-code"
-	preferredLanguageCodeKey = "x-md-global-preferred-language-code"
-	appIdKey                 = "x-md-global-app-id"
-	projectTypeKey           = "x-md-global-project-type"
-	areaCodeKey              = "x-md-global-area-code"
-	twoAreaCodeKey           = "x-md-global-two-area-code"
-	requestIdKey             = "x-md-global-request-id"
-	basicDataKey             = "x-md-global-basic-data"
-	deviceIdKey              = "x-md-global-device-id"
+	clientIP                   = "X-Real-Ip"                 // 客户端IP
+	appVersionKey              = "x-app-version"             // app 版本号(从basicData 中解析得到)
+	platformKey                = "x-platform"                // 平台(从basicData 中解析得到)
+	userIdKey                  = "x-user-id"                 // 用户ID
+	deviceIdKey                = "x-device-id"               // 设备ID(从basicData 中解析得到)
+	appIdKey                   = "x-app-id"                  // app id(从basicData 中解析得到)
+	areaCodeKey                = "x-area-code"               // 区域码(country_code 转换得到)
+	languageCodeKey            = "Languagecode"              // 语言code
+	countryCodeKey             = "Countrycode"               // 国家code
+	preferredLanguageCodeKey   = "Preferredlanguagecode"     // 偏好语言
+	requestIdKey               = "X-Request-Id"              // req id
+	basicDataKey               = "Basicdata"                 // basic data
+	wikiDataCenterRequestIdKey = "Wikidatacenter-Request-Id" // req id
+	sceneCodeKey               = "SceneCode"                 // scene code
+	wikiChannelKey             = "wikichannel"               // wiki channel
+	wscKey                     = "wsc"                       // wsc
+	apphpgverKey               = "apphpgver"                 // app version
 )
 
 type Platform string
@@ -74,36 +75,6 @@ func WithDeviceId(ctx context.Context, in string) context.Context {
 
 func DeviceIdFrom(ctx context.Context) (string, bool) {
 	return fromValue(ctx, deviceIdKey)
-}
-
-// 后台用户ID
-
-func WithAccountID(ctx context.Context, in string) context.Context {
-	return withValue(ctx, accountIDKey, in)
-}
-
-func AccountIDFrom(ctx context.Context) (string, bool) {
-	return fromValue(ctx, accountIDKey)
-}
-
-// 后台用户名称
-
-func WithAccountName(ctx context.Context, in string) context.Context {
-	return withValue(ctx, accountNameKey, in)
-}
-
-func AccountNameFrom(ctx context.Context) (string, bool) {
-	return fromValue(ctx, accountNameKey)
-}
-
-// 获取项目类型
-
-func WithProjectType(ctx context.Context, in string) context.Context {
-	return withValue(ctx, projectTypeKey, in)
-}
-
-func ProjectTypeFrom(ctx context.Context) (string, bool) {
-	return fromValue(ctx, projectTypeKey)
 }
 
 // 客户端ip
@@ -200,16 +171,6 @@ func AreaCodeFrom(ctx context.Context) (string, bool) {
 	return fromValue(ctx, areaCodeKey)
 }
 
-// two area code
-
-func WithTwoAreaCode(ctx context.Context, in string) context.Context {
-	return withValue(ctx, twoAreaCodeKey, in)
-}
-
-func TwoAreaCodeFrom(ctx context.Context) (string, bool) {
-	return fromValue(ctx, twoAreaCodeKey)
-}
-
 // request id
 
 func WithRequestId(ctx context.Context, in string) context.Context {
@@ -219,6 +180,58 @@ func WithRequestId(ctx context.Context, in string) context.Context {
 func RequestIdFrom(ctx context.Context) (string, bool) {
 	return fromValue(ctx, requestIdKey)
 }
+
+// wiki data center request-id
+
+func WithWikiDataCenterRequestId(ctx context.Context, in string) context.Context {
+	return withValue(ctx, wikiDataCenterRequestIdKey, in)
+}
+
+func WikiDataCenterRequestIdFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, wikiDataCenterRequestIdKey)
+}
+
+// scene code
+
+func WithSceneCode(ctx context.Context, in string) context.Context {
+	return withValue(ctx, sceneCodeKey, in)
+}
+
+func SceneCodeFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, sceneCodeKey)
+}
+
+// wiki channel
+
+func WithWikiChannel(ctx context.Context, in string) context.Context {
+	return withValue(ctx, wikiChannelKey, in)
+}
+
+func WikiChannelFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, wikiChannelKey)
+}
+
+// wsc
+
+func WithWSC(ctx context.Context, in string) context.Context {
+	return withValue(ctx, wscKey, in)
+}
+
+func WSCFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, wscKey)
+}
+
+// app hpgver
+
+func WithAPPHPGVer(ctx context.Context, in string) context.Context {
+	return withValue(ctx, apphpgverKey, in)
+}
+
+func AppHPGVerFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, apphpgverKey)
+}
+
+// context
 
 func LoggerValues() []interface{} {
 	return []interface{}{
@@ -253,6 +266,10 @@ func LoggerValues() []interface{} {
 		"platform", log.Valuer(func(ctx context.Context) interface{} {
 			platform, _ := PlatformFrom(ctx)
 			return platform
+		}),
+		"scene_code", log.Valuer(func(ctx context.Context) interface{} {
+			sceneCode, _ := SceneCodeFrom(ctx)
+			return sceneCode
 		}),
 	}
 }
