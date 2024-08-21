@@ -1,9 +1,5 @@
 package config
 
-import (
-	"github.com/airunny/wiki-go-tools/ikafka"
-)
-
 type DataConfig_Database struct {
 	Driver             string `protobuf:"bytes,1,opt,name=driver,json=driver,proto3" json:"driver"`
 	Source             string `protobuf:"bytes,2,opt,name=source,json=source,proto3" json:"source"`
@@ -79,12 +75,11 @@ type Elastic struct {
 }
 
 type Business struct {
-	Aws                   *AWS                   `json:"aws"`
-	Elastic               *Elastic               `json:"elastic"`
-	UserIdKey             string                 `json:"user_id_key"`
-	AppFlyerLogConsumer   *Consumer              `json:"app_flyer_log_consumer"`
-	SearchRecordConsumer  *Consumer              `json:"search_record_consumer"`
-	SearchCollectConsumer *Consumer              `json:"search_collect_consumer"`
-	FXStatisticsConsumer  *Consumer              `json:"fx_statistics_consumer"`
-	KAFKAProducer         *ikafka.ProducerConfig `json:"kafka_producer"`
+	Aws                   *AWS      `json:"aws"`
+	Elastic               *Elastic  `json:"elastic"`
+	UserIdKey             string    `json:"user_id_key"`
+	AppFlyerLogConsumer   *Consumer `json:"app_flyer_log_consumer"`
+	SearchRecordConsumer  *Consumer `json:"search_record_consumer"`
+	SearchCollectConsumer *Consumer `json:"search_collect_consumer"`
+	FXStatisticsConsumer  *Consumer `json:"fx_statistics_consumer"`
 }
