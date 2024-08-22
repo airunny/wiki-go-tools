@@ -47,7 +47,7 @@ func WithLogger(logger log.Logger) ClientOption {
 	}
 }
 
-func DialInsecure(ctx context.Context, endpoint string, opts ...ClientOption) *grpc.ClientConn {
+func DialInsecureWithShort(ctx context.Context, endpoint string, opts ...ClientOption) *grpc.ClientConn {
 	o := newOption()
 	for _, opt := range opts {
 		opt(o)
@@ -82,4 +82,21 @@ func DialInsecure(ctx context.Context, endpoint string, opts ...ClientOption) *g
 		panic(err)
 	}
 	return conn
+}
+
+func DialInsecure(ctx context.Context, logger log.Logger, opts ...kratosGrpc.ClientOption) (*grpc.ClientConn, error) {
+	_, ok := os.LookupEnv("KUBERNETES_SERVICE_HOST")
+	if ok && os.Getenv("REGISTRY") != "NO" {
+		clientSet, err := k8s.NewClient()
+		if err != nil {
+			panic(err)
+		}
+
+		reg := registry.NewRegistry(clientSet, logger)
+		reg.Start()
+
+		opts = append(opts, kratosGrpc.WithDiscovery(reg))
+	}
+
+	return kratosGrpc.DialInsecure(ctx, opts...)
 }
