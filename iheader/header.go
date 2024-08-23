@@ -23,11 +23,6 @@ const (
 	BasicDataHeaderKey            = "Basicdata"                 // 其他信息
 	PreferredLanguageHeaderKeyOld = "Preferredlanguagecode"     // 偏好语言，后续使用 X-Preferred-Language-Code 代替
 	PreferredLanguageHeaderKey    = "X-Preferred-Language-Code" // 偏好语言
-	DeviceVersionHeaderKey        = "X-Device-Version"          // 设备版本号
-	AppVersionHeaderKey           = "X-Version"                 // app版本号
-	PlatformHeaderKey             = "X-Platform"                // 平台
-	AppIdHeaderKey                = "X-App-Id"                  // app_id
-	DeviceIdHeaderKey             = "X-Device-Id"               // 设备唯一标识
 	WikiDataCenterRequestIdKey    = "Wikidatacenter-Request-Id" // req id
 	SceneCodeKey                  = "SceneCode"                 // scene code
 	WikiChannelKey                = "wikichannel"               // wiki channel
@@ -96,152 +91,23 @@ func GetPreferredLanguageCode(h transport.Header) string {
 func GetWikiDataCenterRequestId(h transport.Header) string {
 	return h.Get(WikiDataCenterRequestIdKey)
 }
+
 func GetSceneCode(h transport.Header) string {
 	return h.Get(SceneCodeKey)
 }
+
 func GetWikiChannel(h transport.Header) string {
 	return h.Get(WikiChannelKey)
 }
+
 func GetWSC(h transport.Header) string {
 	return h.Get(WscKey)
 }
+
 func GetAppHPGVer(h transport.Header) string {
 	return h.Get(ApphpgverKey)
 }
 
 func GetBasicData(h transport.Header) string {
 	return h.Get(BasicDataHeaderKey)
-}
-
-func ParseBasicData(h transport.Header) func(key string) string {
-	out := h.Get(BasicDataHeaderKey)
-	if out == "" {
-		return func(key string) string {
-			return h.Get(key)
-		}
-	}
-
-	var (
-		splits  = strings.Split(out, ",")
-		mapping = make(map[string]string, len(splits))
-	)
-
-	if len(splits) > 0 {
-		mapping[PlatformHeaderKey] = splits[0]
-	}
-
-	if len(splits) > 1 {
-		mapping[DeviceVersionHeaderKey] = splits[1]
-	}
-
-	if len(splits) > 2 {
-		mapping[AppIdHeaderKey] = splits[2]
-	}
-
-	if len(splits) > 3 {
-		mapping[AppVersionHeaderKey] = splits[3]
-	}
-
-	if len(splits) > 5 {
-		mapping[DeviceIdHeaderKey] = splits[5]
-	}
-
-	return func(key string) string {
-		value := h.Get(key)
-		if value != "" {
-			return value
-		}
-
-		return mapping[key]
-	}
-}
-
-func GetPlatform(h transport.Header) string {
-	out := h.Get(PlatformHeaderKey)
-	if out != "" {
-		return out
-	}
-
-	out = h.Get(BasicDataHeaderKey)
-	if out == "" {
-		return ""
-	}
-
-	splits := strings.Split(out, ",")
-	if len(splits) > 0 {
-		return splits[0]
-	}
-
-	return ""
-}
-
-func GetDeviceVersion(h transport.Header) string {
-	out := h.Get(BasicDataHeaderKey)
-	if out == "" {
-		return ""
-	}
-
-	splits := strings.Split(out, ",")
-	if len(splits) > 1 {
-		return splits[1]
-	}
-
-	return ""
-}
-
-func GetAppId(h transport.Header) string {
-	out := h.Get(AppIdHeaderKey)
-	if out != "" {
-		return out
-	}
-
-	out = h.Get(BasicDataHeaderKey)
-	if out == "" {
-		return ""
-	}
-
-	splits := strings.Split(out, ",")
-	if len(splits) > 2 {
-		return splits[2]
-	}
-
-	return ""
-}
-
-func GetAppVersion(h transport.Header) string {
-	out := h.Get(AppVersionHeaderKey)
-	if out != "" {
-		return out
-	}
-
-	out = h.Get(BasicDataHeaderKey)
-	if out == "" {
-		return ""
-	}
-
-	splits := strings.Split(out, ",")
-	if len(splits) > 3 {
-		return splits[3]
-	}
-
-	return ""
-}
-
-func GetDeviceId(h transport.Header) string {
-	out := h.Get(DeviceIdHeaderKey)
-	if out != "" {
-		return out
-	}
-
-	out = h.Get(DeviceIdHeaderKey)
-	if out == "" {
-		return ""
-	}
-
-	splits := strings.Split(out, ",")
-	if len(splits) > 5 {
-		return splits[5]
-	}
-
-	return ""
 }

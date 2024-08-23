@@ -9,12 +9,7 @@ import (
 
 const (
 	clientIP                   = "X-Real-Ip"                 // 客户端IP
-	appVersionKey              = "x-app-version"             // app 版本号(从basicData 中解析得到)
-	platformKey                = "x-platform"                // 平台(从basicData 中解析得到)
 	userIdKey                  = "x-user-id"                 // 用户ID
-	deviceIdKey                = "x-device-id"               // 设备ID(从basicData 中解析得到)
-	appIdKey                   = "x-app-id"                  // app id(从basicData 中解析得到)
-	areaCodeKey                = "x-area-code"               // 区域码(country_code 转换得到)
 	languageCodeKey            = "Languagecode"              // 语言code
 	countryCodeKey             = "Countrycode"               // 国家code
 	preferredLanguageCodeKey   = "Preferredlanguagecode"     // 偏好语言
@@ -67,16 +62,6 @@ func BasicDataFrom(ctx context.Context) (string, bool) {
 	return fromValue(ctx, basicDataKey)
 }
 
-// device id
-
-func WithDeviceId(ctx context.Context, in string) context.Context {
-	return withValue(ctx, deviceIdKey, in)
-}
-
-func DeviceIdFrom(ctx context.Context) (string, bool) {
-	return fromValue(ctx, deviceIdKey)
-}
-
 // 客户端ip
 
 func WithClientIP(ctx context.Context, in string) context.Context {
@@ -85,30 +70,6 @@ func WithClientIP(ctx context.Context, in string) context.Context {
 
 func ClientIPFrom(ctx context.Context) (string, bool) {
 	return fromValue(ctx, clientIP)
-}
-
-// app版本
-
-func WithAppVersion(ctx context.Context, in string) context.Context {
-	return withValue(ctx, appVersionKey, in)
-}
-
-func AppVersionFrom(ctx context.Context) (string, bool) {
-	return fromValue(ctx, appVersionKey)
-}
-
-// app 平台
-
-func WithAppPlatform(ctx context.Context, in Platform) context.Context {
-	return withValue(ctx, platformKey, string(in))
-}
-
-func PlatformFrom(ctx context.Context) (Platform, bool) {
-	plat, ok := fromValue(ctx, platformKey)
-	if !ok {
-		return "", false
-	}
-	return Platform(plat), true
 }
 
 // app 用户ID
@@ -149,26 +110,6 @@ func WithCountryCode(ctx context.Context, in string) context.Context {
 
 func CountryCodeFrom(ctx context.Context) (string, bool) {
 	return fromValue(ctx, countryCodeKey)
-}
-
-// appid
-
-func WithAppId(ctx context.Context, in string) context.Context {
-	return withValue(ctx, appIdKey, in)
-}
-
-func AppIdFrom(ctx context.Context) (string, bool) {
-	return fromValue(ctx, appIdKey)
-}
-
-// area code
-
-func WithAreaCode(ctx context.Context, in string) context.Context {
-	return withValue(ctx, areaCodeKey, in)
-}
-
-func AreaCodeFrom(ctx context.Context) (string, bool) {
-	return fromValue(ctx, areaCodeKey)
 }
 
 // request id

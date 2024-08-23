@@ -4,7 +4,6 @@ import (
 	"context"
 	stdHttp "net/http"
 
-	"github.com/airunny/wiki-go-tools/country"
 	"github.com/airunny/wiki-go-tools/icontext"
 	"github.com/airunny/wiki-go-tools/iheader"
 	"github.com/airunny/wiki-go-tools/reqid"
@@ -102,21 +101,6 @@ func TryParseHeader(opts ...Option) middleware.Middleware {
 			ctx = icontext.WithWSC(ctx, iheader.GetWSC(header))
 			// app hpg ver
 			ctx = icontext.WithAPPHPGVer(ctx, iheader.GetAppHPGVer(header))
-
-			// 从basic data中解析内容
-			baseFunc := iheader.ParseBasicData(header)
-			// 平台
-			ctx = icontext.WithAppPlatform(ctx, icontext.Platform(baseFunc(iheader.PlatformHeaderKey)))
-			// app id
-			ctx = icontext.WithAppId(ctx, baseFunc(iheader.AppIdHeaderKey))
-			//  version
-			ctx = icontext.WithAppVersion(ctx, baseFunc(iheader.AppVersionHeaderKey))
-			// device_id
-			ctx = icontext.WithDeviceId(ctx, baseFunc(iheader.DeviceIdHeaderKey))
-			// 区域码
-			if countryCode != "" {
-				ctx = icontext.WithAreaCode(ctx, country.GetAreaCodeByCode(countryCode))
-			}
 			return handler(ctx, req)
 		}
 	}
