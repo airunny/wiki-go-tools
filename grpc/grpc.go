@@ -60,7 +60,7 @@ func DialInsecureWithShort(ctx context.Context, endpoint string, opts ...ClientO
 			recovery.Recovery(),
 			validate.Validator(),
 			tracing.Client(),
-			mmd.Client(),
+			mmd.Client(mmd.WithPropagatedPrefix()),
 		),
 	}
 
