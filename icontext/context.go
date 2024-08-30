@@ -9,10 +9,10 @@ import (
 
 const (
 	clientIP                   = "X-Real-Ip"                 // 客户端IP
-	userIdKey                  = "x-user-id"                 // 用户ID
-	languageCodeKey            = "Languagecode"              // 语言code
-	countryCodeKey             = "Countrycode"               // 国家code
-	preferredLanguageCodeKey   = "Preferredlanguagecode"     // 偏好语言
+	userIdKey                  = "X-User-Id"                 // 用户ID
+	languageCodeKey            = "X-Language-Code"           // 语言code
+	countryCodeKey             = "X-Country-Code"            // 国家code
+	preferredLanguageCodeKey   = "X-Preferredlanguagecode"   // 偏好语言
 	requestIdKey               = "X-Request-Id"              // req id
 	basicDataKey               = "Basicdata"                 // basic data
 	wikiDataCenterRequestIdKey = "Wikidatacenter-Request-Id" // req id
@@ -32,12 +32,12 @@ const (
 )
 
 func withValue(ctx context.Context, key, value string) context.Context {
-	md, ok := metadata.FromServerContext(ctx)
-	if !ok {
-		md = metadata.Metadata{}
-	}
-	md.Set(key, value)
-	ctx = metadata.NewServerContext(ctx, md)
+	//md, ok := metadata.FromServerContext(ctx)
+	//if !ok {
+	//	md = metadata.Metadata{}
+	//}
+	//md.Set(key, value)
+	//ctx = metadata.NewServerContext(ctx, md)
 
 	return metadata.AppendToClientContext(ctx, key, value)
 }
