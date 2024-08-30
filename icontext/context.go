@@ -31,14 +31,13 @@ const (
 )
 
 func withValue(ctx context.Context, key, value string) context.Context {
-	//md, ok := metadata.FromServerContext(ctx)
-	//if !ok {
-	//	md = metadata.Metadata{}
-	//}
-	//md.Set(key, value)
-	//ctx = metadata.NewServerContext(ctx, md)
-
-	return metadata.AppendToClientContext(ctx, key, value)
+	md, ok := metadata.FromServerContext(ctx)
+	if !ok {
+		md = metadata.Metadata{}
+	}
+	md.Set(key, value)
+	return metadata.NewServerContext(ctx, md)
+	//return metadata.AppendToClientContext(ctx, key, value)
 }
 
 func fromValue(ctx context.Context, key string) (string, bool) {
