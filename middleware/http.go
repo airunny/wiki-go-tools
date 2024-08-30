@@ -95,12 +95,6 @@ func TryParseHeader(opts ...Option) middleware.Middleware {
 			ctx = icontext.WithWikiDataCenterRequestId(ctx, iheader.GetWikiDataCenterRequestId(header))
 			// scene code
 			ctx = icontext.WithSceneCode(ctx, iheader.GetSceneCode(header))
-			// wiki channel
-			ctx = icontext.WithWikiChannel(ctx, iheader.GetWikiChannel(header))
-			// wsc
-			ctx = icontext.WithWSC(ctx, iheader.GetWSC(header))
-			// app hpg ver
-			ctx = icontext.WithAPPHPGVer(ctx, iheader.GetAppHPGVer(header))
 			return handler(ctx, req)
 		}
 	}

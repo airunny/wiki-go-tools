@@ -25,9 +25,6 @@ const (
 	PreferredLanguageHeaderKey    = "X-Preferred-Language-Code" // 偏好语言
 	WikiDataCenterRequestIdKey    = "Wikidatacenter-Request-Id" // req id
 	SceneCodeKey                  = "SceneCode"                 // scene code
-	WikiChannelKey                = "wikichannel"               // wiki channel
-	WscKey                        = "wsc"                       // wsc
-	ApphpgverKey                  = "apphpgver"
 )
 
 func GetToken(h transport.Header) string {
@@ -94,18 +91,6 @@ func GetWikiDataCenterRequestId(h transport.Header) string {
 
 func GetSceneCode(h transport.Header) string {
 	return h.Get(SceneCodeKey)
-}
-
-func GetWikiChannel(h transport.Header) string {
-	return h.Get(WikiChannelKey)
-}
-
-func GetWSC(h transport.Header) string {
-	return h.Get(WscKey)
-}
-
-func GetAppHPGVer(h transport.Header) string {
-	return h.Get(ApphpgverKey)
 }
 
 func GetBasicData(h transport.Header) string {

@@ -8,18 +8,17 @@ import (
 )
 
 const (
-	clientIP                   = "X-Real-Ip"                   // 客户端IP
-	userIdKey                  = "X-User-Id"                   // 用户ID
-	languageCodeKey            = "X-Language-Code"             // 语言code
-	countryCodeKey             = "X-Country-Code"              // 国家code
-	preferredLanguageCodeKey   = "X-Preferred-Language-Code"   // 偏好语言
-	requestIdKey               = "X-Request-Id"                // req id
-	basicDataKey               = "X-Basic-Data"                // basic data
-	wikiDataCenterRequestIdKey = "X-Wikidatacenter-Request-Id" // req id
-	sceneCodeKey               = "X-SceneCode"                 // scene code
-	wikiChannelKey             = "X-Wikichannel"               // wiki channel
-	wscKey                     = "X-Wsc"                       // wsc
-	apphpgverKey               = "X-Apphpgver"                 // app version
+	wikiDataCenterRequestIdKey = "WikidataCenter-Request-ID" // req id
+	clientIP                   = "X-Forwarded-For"           // 客户端IP
+	basicDataKey               = "BasicData"                 // basic data
+	languageCodeKey            = "LanguageCode"              // 语言code
+	countryCodeKey             = "CountryCode"               // 国家code
+	preferredLanguageCodeKey   = "PreferredLanguageCode"     // 偏好语言
+	clientPort                 = "ClientPort"                // 客户端设备端口号
+	clientMac                  = "ClientMac"                 // 客户端设备Mac地址
+	sceneCodeKey               = "SceneCode"                 // scene code
+	requestIdKey               = "RequestId"                 // req id
+	userIdKey                  = "X-User-Id"                 // 用户ID
 )
 
 type Platform string
@@ -142,34 +141,24 @@ func SceneCodeFrom(ctx context.Context) (string, bool) {
 	return fromValue(ctx, sceneCodeKey)
 }
 
-// wiki channel
+// clientPort
 
-func WithWikiChannel(ctx context.Context, in string) context.Context {
-	return withValue(ctx, wikiChannelKey, in)
+func WithClientPort(ctx context.Context, in string) context.Context {
+	return withValue(ctx, clientPort, in)
 }
 
-func WikiChannelFrom(ctx context.Context) (string, bool) {
-	return fromValue(ctx, wikiChannelKey)
+func ClientPortFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, clientPort)
 }
 
-// wsc
+// clientMac
 
-func WithWSC(ctx context.Context, in string) context.Context {
-	return withValue(ctx, wscKey, in)
+func WithClientMac(ctx context.Context, in string) context.Context {
+	return withValue(ctx, clientMac, in)
 }
 
-func WSCFrom(ctx context.Context) (string, bool) {
-	return fromValue(ctx, wscKey)
-}
-
-// app hpgver
-
-func WithAPPHPGVer(ctx context.Context, in string) context.Context {
-	return withValue(ctx, apphpgverKey, in)
-}
-
-func AppHPGVerFrom(ctx context.Context) (string, bool) {
-	return fromValue(ctx, apphpgverKey)
+func ClientMacFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, clientMac)
 }
 
 // context
