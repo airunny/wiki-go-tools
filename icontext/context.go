@@ -8,18 +8,18 @@ import (
 )
 
 const (
-	clientIP                   = "X-Real-Ip"                 // 客户端IP
-	userIdKey                  = "X-User-Id"                 // 用户ID
-	languageCodeKey            = "X-Language-Code"           // 语言code
-	countryCodeKey             = "X-Country-Code"            // 国家code
-	preferredLanguageCodeKey   = "X-Preferredlanguagecode"   // 偏好语言
-	requestIdKey               = "X-Request-Id"              // req id
-	basicDataKey               = "Basicdata"                 // basic data
-	wikiDataCenterRequestIdKey = "Wikidatacenter-Request-Id" // req id
-	sceneCodeKey               = "SceneCode"                 // scene code
-	wikiChannelKey             = "wikichannel"               // wiki channel
-	wscKey                     = "wsc"                       // wsc
-	apphpgverKey               = "apphpgver"                 // app version
+	clientIP                   = "X-Real-Ip"                   // 客户端IP
+	userIdKey                  = "X-User-Id"                   // 用户ID
+	languageCodeKey            = "X-Language-Code"             // 语言code
+	countryCodeKey             = "X-Country-Code"              // 国家code
+	preferredLanguageCodeKey   = "X-Preferred-Language-Code"   // 偏好语言
+	requestIdKey               = "X-Request-Id"                // req id
+	basicDataKey               = "X-Basic-Data"                // basic data
+	wikiDataCenterRequestIdKey = "X-Wikidatacenter-Request-Id" // req id
+	sceneCodeKey               = "X-SceneCode"                 // scene code
+	wikiChannelKey             = "X-Wikichannel"               // wiki channel
+	wscKey                     = "X-Wsc"                       // wsc
+	apphpgverKey               = "X-Apphpgver"                 // app version
 )
 
 type Platform string
