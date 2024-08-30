@@ -6,9 +6,9 @@ import (
 	"time"
 
 	k8s "github.com/airunny/wiki-go-tools/kubernetes"
+	mmd "github.com/airunny/wiki-go-tools/metadata"
 	"github.com/airunny/wiki-go-tools/registry"
 	"github.com/go-kratos/kratos/v2/log" // nolint
-	mmd "github.com/go-kratos/kratos/v2/middleware/metadata"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/middleware/validate"
@@ -60,7 +60,7 @@ func DialInsecureWithShort(ctx context.Context, endpoint string, opts ...ClientO
 			recovery.Recovery(),
 			validate.Validator(),
 			tracing.Client(),
-			mmd.Client(mmd.WithPropagatedPrefix()),
+			mmd.Client(),
 		),
 	}
 

@@ -13,13 +13,13 @@ import (
 type Option func(*options)
 
 type options struct {
-	prefix  []string
-	md      metadata.Metadata
-	noLimit bool
+	prefix []string
+	md     metadata.Metadata
+	limit  bool
 }
 
 func (o *options) hasPrefix(key string) bool {
-	if o.noLimit {
+	if !o.limit {
 		return true
 	}
 
@@ -39,9 +39,9 @@ func WithConstants(md metadata.Metadata) Option {
 	}
 }
 
-func WithNoLimit() Option {
+func WithLimit() Option {
 	return func(o *options) {
-		o.noLimit = true
+		o.limit = true
 	}
 }
 
