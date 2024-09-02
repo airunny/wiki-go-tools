@@ -70,3 +70,29 @@ func AreaCodeFrom(ctx context.Context) (string, bool) {
 
 	return country.GetAreaCodeByCode(countryCode), true
 }
+
+func AllLanguageCodeFrom(ctx context.Context) []string {
+	var (
+		languageCode, _          = LanguageCodeFrom(ctx)
+		preferredLanguageCode, _ = PreferredLanguageCodeFrom(ctx)
+	)
+
+	var (
+		languages = strings.Split(preferredLanguageCode, ",")
+		out       = make([]string, 0, len(languages)+1)
+	)
+
+	for _, language := range languages {
+		language = strings.ToLower(strings.TrimSpace(language))
+		if language == "" {
+			continue
+		}
+
+		if language == strings.ToLower(languageCode) {
+			continue
+		}
+		out = append(out, language)
+	}
+	out = append(out, languageCode)
+	return out
+}
