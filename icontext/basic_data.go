@@ -7,6 +7,35 @@ import (
 	"github.com/airunny/wiki-go-tools/country"
 )
 
+var (
+	appIdMapping = map[string]string{
+		"1":   "fxeye",
+		"2":   "wikifx",
+		"3":   "wikifx",
+		"4":   "wikibit",
+		"5":   "fxeye",
+		"6":   "fxeye",
+		"7":   "fxeye",
+		"8":   "wikibit",
+		"9":   "wikibit",
+		"10":  "wikibit",
+		"11":  "wikifx",
+		"12":  "forexpay",
+		"13":  "fxeye",
+		"14":  "wikifx",
+		"15":  "wikifx",
+		"16":  "wikifx",
+		"100": "wikitrade",
+		"101": "wikitrade",
+		"102": "wikitrade",
+		"200": "fxeye",
+		"300": "wikiglobal",
+		"400": "wikifx",
+		"500": "wikistock",
+		"600": "lemonx",
+	}
+)
+
 func fromBasicData(ctx context.Context, index int) (string, bool) {
 	basicData, ok := BasicDataFrom(ctx)
 	if !ok {
@@ -60,6 +89,15 @@ func AppIdFrom(ctx context.Context) (string, bool) {
 	return fromBasicData(ctx, 2)
 }
 
+func ProjectFrom(ctx context.Context) string {
+	appId, ok := AppIdFrom(ctx)
+	if !ok {
+		return ""
+	}
+
+	return appIdMapping[appId]
+}
+
 // area code
 
 func AreaCodeFrom(ctx context.Context) (string, bool) {
@@ -93,6 +131,6 @@ func AllLanguageCodeFrom(ctx context.Context) []string {
 		}
 		out = append(out, language)
 	}
-	out = append(out, languageCode)
+	out = append(out, strings.ToLower(languageCode))
 	return out
 }
