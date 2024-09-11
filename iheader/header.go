@@ -71,19 +71,19 @@ func GetCountryCode(h transport.Header) string {
 func GetLanguageCode(h transport.Header) string {
 	out := h.Get(LanguageCodeHeaderKey)
 	if out != "" {
-		return out
+		return languageMiddle(out)
 	}
 
-	return h.Get(LanguageCodeHeaderKeyOld)
+	return languageMiddle(h.Get(LanguageCodeHeaderKeyOld))
 }
 
 func GetPreferredLanguageCode(h transport.Header) string {
 	out := h.Get(PreferredLanguageHeaderKey)
 	if out != "" {
-		return out
+		return languageMiddle(out)
 	}
 
-	return h.Get(PreferredLanguageHeaderKeyOld)
+	return languageMiddle(h.Get(PreferredLanguageHeaderKeyOld))
 }
 func GetWikiDataCenterRequestId(h transport.Header) string {
 	return h.Get(WikiDataCenterRequestIdKey)
@@ -95,4 +95,20 @@ func GetSceneCode(h transport.Header) string {
 
 func GetBasicData(h transport.Header) string {
 	return h.Get(BasicDataHeaderKey)
+}
+
+func languageMiddle(in string) string {
+	var (
+		values    = strings.Split(in, ",")
+		newValues = make([]string, 0, len(values))
+	)
+
+	for _, value := range values {
+		value = strings.ToLower(value)
+		if value == "zh" {
+			value = "zh-hk"
+		}
+		newValues = append(newValues, value)
+	}
+	return strings.Join(newValues, ",")
 }
