@@ -15,7 +15,7 @@ const (
 	XRealIpHeaderKey              = "X-Real-Ip"                 // 客户端IP
 	UserIdHeaderKey               = "X-User-Id"                 // 用户ID
 	RequestIdKey                  = "X-Request-Id"              // request_id
-	RequestIdKeyOld               = "Wikidatacenter-Request-Id" // kong传递下来的request_id
+	RequestIdKeyOld               = "WikidataCenter-Request-Id" // kong传递下来的request_id
 	CountryCodeHeaderKeyOld       = "Countrycode"               // 国家code，后续使用X-Country-Code" 代替
 	CountryCodeHeaderKey          = "X-Country-Code"            // 国家code
 	LanguageCodeHeaderKeyOld      = "Languagecode"              // 语言code，使用X-Language-Code 代替
@@ -23,7 +23,6 @@ const (
 	BasicDataHeaderKey            = "Basicdata"                 // 其他信息
 	PreferredLanguageHeaderKeyOld = "Preferredlanguagecode"     // 偏好语言，后续使用 X-Preferred-Language-Code 代替
 	PreferredLanguageHeaderKey    = "X-Preferred-Language-Code" // 偏好语言
-	WikiDataCenterRequestIdKey    = "Wikidatacenter-Request-Id" // req id
 	SceneCodeKey                  = "SceneCode"                 // scene code
 )
 
@@ -86,7 +85,7 @@ func GetPreferredLanguageCode(h transport.Header) string {
 	return languageMiddle(h.Get(PreferredLanguageHeaderKeyOld))
 }
 func GetWikiDataCenterRequestId(h transport.Header) string {
-	return h.Get(WikiDataCenterRequestIdKey)
+	return h.Get(RequestIdKeyOld)
 }
 
 func GetSceneCode(h transport.Header) string {
