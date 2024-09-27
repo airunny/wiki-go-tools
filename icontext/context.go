@@ -200,5 +200,9 @@ func LoggerValues() []interface{} {
 			sceneCode, _ := SceneCodeFrom(ctx)
 			return sceneCode
 		}),
+		"wikidatacenter-request-id", log.Valuer(func(ctx context.Context) interface{} {
+			id, _ := WikiDataCenterRequestIdFrom(ctx)
+			return id
+		}),
 	}
 }
