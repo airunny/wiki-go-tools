@@ -17,8 +17,8 @@ import (
 )
 
 const (
-	logBufMax   = 1 << 10 // 1KB
-	bodyBufMax  = 1 << 10 // 1KB
+	logBufMax   = 1 << 21 // 1KB
+	bodyBufMax  = 1 << 20 // 1KB
 	metricsPath = "/metrics"
 	healthPath  = "/healthz"
 	swaggerPath = "/q/service"
