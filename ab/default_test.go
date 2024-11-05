@@ -59,7 +59,7 @@ func TestAB(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		assert.Equal(t, test.Group, AB(test.Id, groups), test.Id)
+		assert.Equal(t, test.Group, ABTest(test.Id, groups), test.Id)
 	}
 }
 

@@ -6,8 +6,8 @@ import (
 	"math/big"
 )
 
-// AB 测试分组，目前没有存储，只是对入参id分摊到groups中
-func AB(id string, groups []string, opts ...Option) string {
+// ABTest 测试分组，目前没有存储，只是对入参id分摊到groups中
+func ABTest(id string, groups []string, opts ...Option) string {
 	o := newDefaultOptions()
 	for _, opt := range opts {
 		opt(o)
