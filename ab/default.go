@@ -2,6 +2,7 @@ package ab
 
 import (
 	"crypto/md5"
+	"encoding/hex"
 	"math/big"
 )
 
@@ -19,14 +20,24 @@ func AB(id string, groups []string, opts ...Option) string {
 	// 获取用户ID的 MD5 数值
 	hashInt := stringToMD5Int(id)
 	// 计算分组索引
-	groupIndex := int(hashInt % uint64(len(groups)))
+	num2 := new(big.Int)
+	num2.SetInt64(int64(len(groups)))
+
+	result := new(big.Int)
+	result.Mod(hashInt, num2)
+	groupIndex := int(result.Uint64())
 	return groups[groupIndex]
 }
 
-func stringToMD5Int(str string) uint64 {
+func stringToMD5Int(str string) *big.Int {
 	hash := md5.New()
 	hash.Write([]byte(str))
 	hashBytes := hash.Sum(nil)
-	hashBigInt := new(big.Int).SetBytes(hashBytes)
-	return hashBigInt.Uint64()
+	hexDigest := hex.EncodeToString(hashBytes)
+	decimalValue := new(big.Int)
+	decimalValue, success := decimalValue.SetString(hexDigest, 16)
+	if !success {
+		return new(big.Int)
+	}
+	return decimalValue
 }
