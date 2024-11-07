@@ -33,6 +33,11 @@ var (
 	languageNameReplacer = strings.NewReplacer("TXT_", "", ".json", "")
 )
 
+func Print() {
+	str, _ := json.Marshal(languages)
+	fmt.Println(string(str))
+}
+
 func SetLanguage(in map[string]Language) {
 	mux.Lock()
 	defer mux.Unlock()
