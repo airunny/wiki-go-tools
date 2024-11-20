@@ -31,17 +31,16 @@ func GetToken(h transport.Header) string {
 }
 
 func GetClientIp(h transport.Header) string {
-	out := h.Get(XRealIpHeaderKey)
-	if out != "" {
-		return out
-	}
+	//out := h.Get(XRealIpHeaderKey)
+	//if out != "" {
+	//	return out
+	//}
 
 	value := h.Get(ForwardForHeaderKey)
 	splits := strings.Split(value, ",")
 	if len(splits) > 0 {
 		return splits[0]
 	}
-
 	return ""
 }
 
