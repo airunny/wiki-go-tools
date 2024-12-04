@@ -19,6 +19,7 @@ const (
 	sceneCodeKey               = "SceneCode"                 // scene code
 	requestIdKey               = "RequestId"                 // req id
 	userIdKey                  = "X-User-Id"                 // 用户ID
+	wscKey                     = "Route-Wsc-Val"             // wsc
 )
 
 type Platform string
@@ -48,6 +49,16 @@ func fromValue(ctx context.Context, key string) (string, bool) {
 
 	out := md.Get(key)
 	return out, out != ""
+}
+
+// wsc
+
+func WithWSC(ctx context.Context, in string) context.Context {
+	return withValue(ctx, wscKey, in)
+}
+
+func WSCFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, wscKey)
 }
 
 // basic data
@@ -203,6 +214,10 @@ func LoggerValues() []interface{} {
 		"wikidatacenter-request-id", log.Valuer(func(ctx context.Context) interface{} {
 			id, _ := WikiDataCenterRequestIdFrom(ctx)
 			return id
+		}),
+		"wsc", log.Valuer(func(ctx context.Context) interface{} {
+			value, _ := WSCFrom(ctx)
+			return value
 		}),
 	}
 }

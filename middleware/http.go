@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	stdHttp "net/http"
+	"os"
 
 	"github.com/airunny/wiki-go-tools/icontext"
 	"github.com/airunny/wiki-go-tools/iheader"
@@ -95,6 +96,12 @@ func TryParseHeader(opts ...Option) middleware.Middleware {
 			ctx = icontext.WithWikiDataCenterRequestId(ctx, iheader.GetWikiDataCenterRequestId(header))
 			// scene code
 			ctx = icontext.WithSceneCode(ctx, iheader.GetSceneCode(header))
+			// wsc
+			wscValue := iheader.GetRouteWSC(header)
+			ctx = icontext.WithWSC(ctx, wscValue)
+			if wscValue != "" {
+				tr.ReplyHeader().Set("route-wsc-env", os.Getenv("APOLLO_CLUSTER"))
+			}
 			return handler(ctx, req)
 		}
 	}

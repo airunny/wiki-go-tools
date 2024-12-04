@@ -16,6 +16,7 @@ const (
 	UserIdHeaderKey               = "X-User-Id"                 // 用户ID
 	RequestIdKey                  = "X-Request-Id"              // request_id
 	RequestIdKeyOld               = "WikidataCenter-Request-Id" // kong传递下来的request_id
+	RequestIdKeyOld2              = "Wikidatacenter-Request-Id" // kong传递下来的request_idv2
 	CountryCodeHeaderKeyOld       = "Countrycode"               // 国家code，后续使用X-Country-Code" 代替
 	CountryCodeHeaderKey          = "X-Country-Code"            // 国家code
 	LanguageCodeHeaderKeyOld      = "Languagecode"              // 语言code，使用X-Language-Code 代替
@@ -24,6 +25,7 @@ const (
 	PreferredLanguageHeaderKeyOld = "Preferredlanguagecode"     // 偏好语言，后续使用 X-Preferred-Language-Code 代替
 	PreferredLanguageHeaderKey    = "X-Preferred-Language-Code" // 偏好语言
 	SceneCodeKey                  = "SceneCode"                 // scene code
+	WSCKey                        = "Route_Wsc_Val"
 )
 
 func GetToken(h transport.Header) string {
@@ -42,6 +44,10 @@ func GetClientIp(h transport.Header) string {
 		return splits[0]
 	}
 	return ""
+}
+
+func GetRouteWSC(h transport.Header) string {
+	return h.Get(WSCKey)
 }
 
 func GetUserId(h transport.Header) string {
@@ -84,7 +90,11 @@ func GetPreferredLanguageCode(h transport.Header) string {
 	return languageMiddle(h.Get(PreferredLanguageHeaderKeyOld))
 }
 func GetWikiDataCenterRequestId(h transport.Header) string {
-	return h.Get(RequestIdKeyOld)
+	value := h.Get(RequestIdKeyOld)
+	if value != "" {
+		return value
+	}
+	return h.Get(RequestIdKeyOld2)
 }
 
 func GetSceneCode(h transport.Header) string {
