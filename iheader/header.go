@@ -25,7 +25,7 @@ const (
 	PreferredLanguageHeaderKeyOld = "Preferredlanguagecode"     // 偏好语言，后续使用 X-Preferred-Language-Code 代替
 	PreferredLanguageHeaderKey    = "X-Preferred-Language-Code" // 偏好语言
 	SceneCodeKey                  = "SceneCode"                 // scene code
-	WSCKey                        = "Route_Wsc_Val"
+	WSCKey                        = "Route_wsc_val"
 )
 
 func GetToken(h transport.Header) string {
