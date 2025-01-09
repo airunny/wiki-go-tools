@@ -2,6 +2,7 @@ package icontext
 
 import (
 	"context"
+	"os"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/metadata"
@@ -218,6 +219,9 @@ func LoggerValues() []interface{} {
 		"wsc", log.Valuer(func(ctx context.Context) interface{} {
 			value, _ := WSCFrom(ctx)
 			return value
+		}),
+		"namespace", log.Valuer(func(ctx context.Context) interface{} {
+			return os.Getenv("NAMESPACE")
 		}),
 	}
 }

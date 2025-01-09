@@ -11,50 +11,50 @@ import (
 )
 
 func TestAB(t *testing.T) {
-	groups := []string{"a", "b", "c"}
+	groups := []string{"A", "B"}
 	tests := []struct {
 		Id    string
 		Group string
 	}{
 		{
 			Id:    "1",
-			Group: "b",
+			Group: "B",
 		},
 		{
 			Id:    "2",
-			Group: "a",
+			Group: "A",
 		},
 		{
 			Id:    "3",
-			Group: "b",
+			Group: "B",
 		},
 		{
 			Id:    "4",
-			Group: "c",
+			Group: "A",
 		},
 		{
 			Id:    "5",
-			Group: "a",
+			Group: "B",
 		},
 		{
 			Id:    "6",
-			Group: "a",
+			Group: "A",
 		},
 		{
 			Id:    "7",
-			Group: "a",
+			Group: "B",
 		},
 		{
 			Id:    "8",
-			Group: "c",
+			Group: "B",
 		},
 		{
 			Id:    "9",
-			Group: "c",
+			Group: "A",
 		},
 		{
 			Id:    "10",
-			Group: "a",
+			Group: "A",
 		},
 	}
 

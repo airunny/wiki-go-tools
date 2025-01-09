@@ -10,7 +10,7 @@ import (
 
 const (
 	tokenExpiresSeconds        = 60 * 60 * 24
-	refreshTokenExpiresSeconds = 60 * 60 * 48
+	refreshTokenExpiresSeconds = 60 * 60 * 25
 )
 
 type (
@@ -27,8 +27,8 @@ type (
 	}
 
 	Account struct {
-		ID                    string `json:"id"`                       // id
-		Name                  string `json:"name"`                     // 名称
+		ID                    string `json:"user_id"`                  // id
+		Role                  int    `json:"role"`                     // 角色
 		RefreshTokenExpiresAt int64  `json:"refresh_token_expires_at"` // 该字段不需要赋值，取配置文件中的时间，程序中更改容易跟access_token的过期时间冲突
 	}
 

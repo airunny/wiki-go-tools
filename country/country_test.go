@@ -1,6 +1,7 @@
 package country
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 )
@@ -24,10 +25,6 @@ func TestGetCountryByCode(t *testing.T) {
 }
 
 func TestGetAreaNameByAreaCode(t *testing.T) {
-	m := make(map[string]struct{})
-	for _, areaCode := range countryAreaMapping {
-		m[areaCode] = struct{}{}
-	}
-
-	fmt.Println("总区域熟练：", len(m))
+	str, _ := json.Marshal(countryCodeMapping)
+	fmt.Println(string(str))
 }
