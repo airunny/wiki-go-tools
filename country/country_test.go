@@ -20,10 +20,6 @@ func TestGetAreaCodeByCode(t *testing.T) {
 	}
 }
 
-func TestGetCountryByCode(t *testing.T) {
-	fmt.Println(GetAreaCodeByCode("156"))
-}
-
 func TestGetAreaNameByAreaCode(t *testing.T) {
 	str, _ := json.Marshal(countryCodeMapping)
 	fmt.Println(string(str))
