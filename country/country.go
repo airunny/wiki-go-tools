@@ -1088,3 +1088,37 @@ func GetAreaNameByAreaCode(code string) string {
 
 	return "其他区"
 }
+
+// GetTwoCharCodeByAreaName 根据区域名称获取该区域下面的所有国家二字码
+func GetTwoCharCodeByAreaName(name string) []string {
+	var areaCode string
+	for key, value := range areaNameMapping {
+		if value == name {
+			areaCode = key
+			break
+		}
+	}
+	areaCode = strings.TrimSpace(areaCode)
+
+	if areaCode == "" {
+		return nil
+	}
+
+	var countryCodes []string
+	for key, value := range countryAreaMapping {
+		if value == areaCode {
+			countryCodes = append(countryCodes, key)
+			continue
+		}
+	}
+
+	twoCharCodes := make([]string, 0, len(countryCodes))
+	for _, countryCode := range countryCodes {
+		country, ok := countryCodeMapping[countryCode]
+		if !ok {
+			continue
+		}
+		twoCharCodes = append(twoCharCodes, country.TwoCharCode)
+	}
+	return twoCharCodes
+}
