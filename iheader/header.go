@@ -7,24 +7,24 @@ import (
 )
 
 const (
-	ResponseContentJsonType       = "application/json"          // json 数据
-	ResponseContentTextType       = "text/plain"                // 文本数据
-	TraceIdHeaderKey              = "X-Trace-Id"                // 链路追踪ID
-	TokenHeaderKey                = "X-Token"                   // 用户token
-	ForwardForHeaderKey           = "X-Forwarded-For"           // 客户端ip
-	XRealIpHeaderKey              = "X-Real-Ip"                 // 客户端IP
-	UserIdHeaderKey               = "X-User-Id"                 // 用户ID
-	RequestIdKey                  = "X-Request-Id"              // request_id
-	RequestIdKeyOld               = "WikidataCenter-Request-Id" // kong传递下来的request_id
-	RequestIdKeyOld2              = "Wikidatacenter-Request-Id" // kong传递下来的request_idv2
-	CountryCodeHeaderKeyOld       = "Countrycode"               // 国家code，后续使用X-Country-Code" 代替
-	CountryCodeHeaderKey          = "X-Country-Code"            // 国家code
-	LanguageCodeHeaderKeyOld      = "Languagecode"              // 语言code，使用X-Language-Code 代替
-	LanguageCodeHeaderKey         = "X-Language-Code"           // 语言code
-	BasicDataHeaderKey            = "Basicdata"                 // 其他信息
-	PreferredLanguageHeaderKeyOld = "Preferredlanguagecode"     // 偏好语言，后续使用 X-Preferred-Language-Code 代替
-	PreferredLanguageHeaderKey    = "X-Preferred-Language-Code" // 偏好语言
-	SceneCodeKey                  = "SceneCode"                 // scene code
+	ResponseContentJsonType       = "application/json"                // json 数据
+	ResponseContentTextType       = "text/plain"                      // 文本数据
+	TraceIdHeaderKey              = "X-Trace-Id"                      // 链路追踪ID
+	TokenHeaderKey                = "X-Token"                         // 用户token
+	ForwardForHeaderKey           = "X-Forwarded-For"                 // 客户端ip
+	XRealIpHeaderKey              = "X-Real-Ip"                       // 客户端IP
+	UserIdHeaderKey               = "X-User-Id"                       // 用户ID
+	RequestIdKey                  = "X-Request-Id"                    // request_id
+	RequestIdKeyOld               = "WikidataCenter-Request-Id"       // kong传递下来的request_id
+	RequestIdKeyOld2              = "Wikidatacenter-Request-Id"       // kong传递下来的request_idv2
+	CountryCodeHeaderKeyOld       = "Countrycode"                     // 国家code，后续使用X-Country-Code" 代替
+	CountryCodeHeaderKey          = "X-Country-Code"                  // 国家code
+	LanguageCodeHeaderKeyOld      = "Languagecode"                    // 语言code，使用X-DeviceLanguage-Code 代替
+	LanguageCodeHeaderKey         = "X-DeviceLanguage-Code"           // 语言code
+	BasicDataHeaderKey            = "Basicdata"                       // 其他信息
+	PreferredLanguageHeaderKeyOld = "Preferredlanguagecode"           // 偏好语言，后续使用 X-Preferred-DeviceLanguage-Code 代替
+	PreferredLanguageHeaderKey    = "X-Preferred-DeviceLanguage-Code" // 偏好语言
+	SceneCodeKey                  = "SceneCode"                       // scene code
 	WSCKey                        = "Route_wsc_val"
 )
 

@@ -86,6 +86,8 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	if h.accesslog {
 		if _, ok := noLogging[req.URL.RequestURI()]; !ok {
 			logBuf := h.fmtLog(req, *req.URL, start, reqBody, wrapResponse)
+			defer h.logBufPool.Put(logBuf)
+
 			ctx := req.Context()
 			ctx = icontext.WithRequestId(ctx, w.Header().Get(iheader.RequestIdKey))
 
