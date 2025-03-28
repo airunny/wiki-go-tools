@@ -65,20 +65,36 @@ type handler struct {
 	*options
 }
 
+func (h *handler) getBodyBuffer() *bytes.Buffer {
+	return h.bodyBufPool.Get().(*bytes.Buffer)
+}
+
+func (h *handler) putBodyBuffer(buf *bytes.Buffer) {
+	buf.Reset()
+	h.bodyBufPool.Put(buf)
+}
+
+func (h *handler) getLogBuffer() *bytes.Buffer {
+	return h.logBufPool.Get().(*bytes.Buffer)
+}
+
+func (h *handler) putLogBuffer(buf *bytes.Buffer) {
+	buf.Reset()
+	h.logBufPool.Put(buf)
+}
+
 func (h *handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	start := time.Now()
 
 	// wrap req body
-	reqBodyBuf := h.bodyBufPool.Get().(*bytes.Buffer)
-	reqBodyBuf.Reset()
-	defer h.bodyBufPool.Put(reqBodyBuf)
+	reqBodyBuf := h.getBodyBuffer()
+	defer h.putBodyBuffer(reqBodyBuf)
 	reqBody := newLogReqBody(req.Body, reqBodyBuf, canRecordBody(req.Header))
 	req.Body = reqBody
 
 	// wrap ResponseWriter
-	respBodyBuf := h.bodyBufPool.Get().(*bytes.Buffer)
-	respBodyBuf.Reset()
-	defer h.bodyBufPool.Put(respBodyBuf)
+	respBodyBuf := h.getBodyBuffer()
+	defer h.putBodyBuffer(respBodyBuf)
 
 	wrapResponse := newResponseWriter(w, respBodyBuf, true)
 	h.handler.ServeHTTP(wrapResponse, req)
@@ -86,7 +102,7 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	if h.accesslog {
 		if _, ok := noLogging[req.URL.RequestURI()]; !ok {
 			logBuf := h.fmtLog(req, *req.URL, start, reqBody, wrapResponse)
-			defer h.logBufPool.Put(logBuf)
+			defer h.putLogBuffer(logBuf)
 
 			ctx := req.Context()
 			ctx = icontext.WithRequestId(ctx, w.Header().Get(iheader.RequestIdKey))
@@ -102,8 +118,7 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 func (h *handler) fmtLog(req *http.Request, u url.URL, start time.Time, wrapRequestBody logReqBody, wrapResponse logResponseWriter) *bytes.Buffer {
 	elapsed := time.Now().Sub(start)
-	buf := h.logBufPool.Get().(*bytes.Buffer)
-	buf.Reset()
+	buf := h.getLogBuffer()
 
 	// method
 	buf.WriteString(req.Method)
