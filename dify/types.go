@@ -302,10 +302,11 @@ func (s *ChatMessagesResponse) ChunkData(v any) error {
 	splits := strings.Split(body, "\n")
 	values := make([]string, 0, len(splits))
 	for _, split := range splits {
-		if strings.TrimSpace(split) == "" {
+		split = strings.TrimSpace(split)
+		if !strings.HasPrefix(split, "data:") {
 			continue
 		}
-		values = append(values, strings.TrimSpace(strings.TrimPrefix(split, "data: ")))
+		values = append(values, strings.TrimSpace(strings.TrimPrefix(split, "data:")))
 	}
 	newBody := fmt.Sprintf("[%s]", strings.Join(values, ","))
 	return json.Unmarshal([]byte(newBody), v)
