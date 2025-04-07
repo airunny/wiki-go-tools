@@ -65,6 +65,7 @@ type AddDatasetRequest struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Permission  string `json:"permission"`
+	APIKey      string `json:"api_key"`
 }
 
 type AddDatasetResponse struct {
@@ -91,8 +92,9 @@ type AddDatasetResponse struct {
 // ============= 获取知识库列表 ===============
 
 type FindDatasetRequest struct {
-	Page  string `json:"page"`  // 页码
-	Limit string `json:"limit"` // 返回条数，默认 20，范围 1-100
+	Page   string `json:"page"`  // 页码
+	Limit  string `json:"limit"` // 返回条数，默认 20，范围 1-100
+	APIKey string `json:"api_key"`
 }
 
 type Dataset struct {
@@ -124,6 +126,7 @@ type FindDatasetResponse struct {
 
 type DeleteDatasetRequest struct {
 	DatasetId string `json:"dataset_id"` // 知识库ID
+	APIKey    string `json:"api_key"`
 }
 
 type DeleteDatasetResponse struct {
@@ -138,6 +141,7 @@ type AddDocumentRequest struct {
 	Text              string       `json:"text"`               // 文档内容
 	IndexingTechnique string       `json:"indexing_technique"` // 索引方式，默认:high_quality
 	ProcessRule       *ProcessRule `json:"process_rule"`       // 处理规则
+	APIKey            string       `json:"api_key"`
 }
 
 type AddDocumentResponse struct {
@@ -178,6 +182,7 @@ type UpdateDocumentRequest struct {
 	Text              string       `json:"text"`               // 文档内容
 	IndexingTechnique string       `json:"indexing_technique"` // 索引方式，默认:high_quality
 	ProcessRule       *ProcessRule `json:"process_rule"`       // 处理规则
+	APIKey            string       `json:"api_key"`
 }
 
 type UpdateDocumentResponse struct {
@@ -214,6 +219,7 @@ type UpdateDocumentResponse struct {
 type DeleteDocumentRequest struct {
 	DatasetId  string `json:"dataset_id"`  // 知识库ID
 	DocumentId string `json:"document_id"` // 文档ID
+	APIKey     string `json:"api_key"`
 }
 
 type DeleteDocumentResponse struct {
@@ -237,6 +243,7 @@ type CompletionMessagesRequest struct {
 	ResponseMode string  `json:"response_mode,omitempty"`
 	User         string  `json:"user,omitempty"`
 	Files        []*File `json:"files,omitempty"`
+	APIKey       string  `json:"api_key"`
 }
 
 type ChatCompletionResponse struct {
@@ -256,6 +263,7 @@ type CompletionMessagesResponse struct {
 type UploadFileRequest struct {
 	FilePath string `json:"file_path"`
 	User     string `json:"user"`
+	APIKey   string `json:"api_key"`
 }
 
 type UploadFileResponse struct {
@@ -279,6 +287,7 @@ type ChatMessagesRequest struct {
 	ConversationId   string  `json:"conversation_id,omitempty"`
 	Files            []*File `json:"files,omitempty"`
 	AutoGenerateName bool    `json:"auto_generate_name"`
+	APIKey           string  `json:"api_key"`
 }
 
 type ChatMessagesResponse struct {

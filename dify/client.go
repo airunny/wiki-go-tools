@@ -24,10 +24,6 @@ func NewClient(url, apiKey string) (*Client, error) {
 		return nil, errors.New("empty dify url")
 	}
 
-	if apiKey == "" {
-		return nil, errors.New("empty dify apikey")
-	}
-
 	return &Client{
 		httpClient: resty.New().
 			SetHeader("Connection", "keep-alive").
@@ -36,7 +32,7 @@ func NewClient(url, apiKey string) (*Client, error) {
 				IdleConnTimeout:     10 * time.Minute, // 空闲连接超时时间
 			}).
 			SetTimeout(10 * time.Minute).
-			OnBeforeRequest(BeforeRequestWrap(fmt.Sprintf("Bearer %s", apiKey))).
+			OnBeforeRequest(BeforeRequestWrap(Authorization(apiKey))).
 			AddRetryCondition(RetryCondition).
 			SetRetryCount(3).
 			OnAfterResponse(AfterResponse),
@@ -44,11 +40,17 @@ func NewClient(url, apiKey string) (*Client, error) {
 	}, nil
 }
 
+func Authorization(apiKey string) string {
+	return fmt.Sprintf("Bearer %s", apiKey)
+}
+
 func BeforeRequestWrap(auth string) resty.RequestMiddleware {
 	return func(_ *resty.Client, request *resty.Request) error {
 		request.Header.Set("Content-Type", "application/json")
 		request.Header.Set("Accept", "application/json")
-		request.Header.Set("Authorization", auth)
+		if request.Header.Get("Authorization") == "" {
+			request.Header.Set("Authorization", auth)
+		}
 		return nil
 	}
 }

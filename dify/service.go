@@ -11,6 +11,7 @@ import (
 func (s *Client) AddDataset(ctx context.Context, in *AddDatasetRequest) (*AddDatasetResponse, error) {
 	var out AddDatasetResponse
 	_, err := s.httpClient.R().
+		SetHeader("Authorization", in.APIKey).
 		SetContext(ctx).
 		SetBody(in).
 		SetResult(&out).
@@ -25,6 +26,7 @@ func (s *Client) AddDataset(ctx context.Context, in *AddDatasetRequest) (*AddDat
 func (s *Client) FindDataset(ctx context.Context, in *FindDatasetRequest) (*FindDatasetResponse, error) {
 	var out FindDatasetResponse
 	_, err := s.httpClient.R().
+		SetHeader("Authorization", in.APIKey).
 		SetContext(ctx).
 		SetResult(&out).
 		Get(fmt.Sprintf("%v/datasets?page=%s&limit=%s", s.url, in.Page, in.Limit))
@@ -38,6 +40,7 @@ func (s *Client) FindDataset(ctx context.Context, in *FindDatasetRequest) (*Find
 func (s *Client) DeleteDataset(ctx context.Context, in *DeleteDatasetRequest) (*DeleteDatasetResponse, error) {
 	var out DeleteDatasetResponse
 	_, err := s.httpClient.R().
+		SetHeader("Authorization", in.APIKey).
 		SetContext(ctx).
 		SetResult(&out).
 		Delete(fmt.Sprintf("%v/datasets/%s", s.url, in.DatasetId))
@@ -51,6 +54,7 @@ func (s *Client) DeleteDataset(ctx context.Context, in *DeleteDatasetRequest) (*
 func (s *Client) AddDocument(ctx context.Context, in *AddDocumentRequest) (*AddDocumentResponse, error) {
 	var out AddDocumentResponse
 	_, err := s.httpClient.R().
+		SetHeader("Authorization", in.APIKey).
 		SetContext(ctx).
 		SetBody(in).
 		SetResult(&out).
@@ -65,6 +69,7 @@ func (s *Client) AddDocument(ctx context.Context, in *AddDocumentRequest) (*AddD
 func (s *Client) UpdateDocument(ctx context.Context, in *UpdateDocumentRequest) (*UpdateDocumentResponse, error) {
 	var out UpdateDocumentResponse
 	_, err := s.httpClient.R().
+		SetHeader("Authorization", in.APIKey).
 		SetContext(ctx).
 		SetBody(in).
 		SetResult(&out).
@@ -79,6 +84,7 @@ func (s *Client) UpdateDocument(ctx context.Context, in *UpdateDocumentRequest) 
 func (s *Client) DeleteDocument(ctx context.Context, in *DeleteDocumentRequest) (*DeleteDocumentResponse, error) {
 	var out DeleteDocumentResponse
 	_, err := s.httpClient.R().
+		SetHeader("Authorization", in.APIKey).
 		SetContext(ctx).
 		SetBody(in).
 		SetResult(&out).
@@ -93,6 +99,7 @@ func (s *Client) DeleteDocument(ctx context.Context, in *DeleteDocumentRequest) 
 func (s *Client) CompletionMessages(ctx context.Context, in *CompletionMessagesRequest) (*CompletionMessagesResponse, error) {
 	var out CompletionMessagesResponse
 	_, err := s.httpClient.R().
+		SetHeader("Authorization", in.APIKey).
 		SetContext(ctx).
 		SetBody(in).
 		SetResult(&out).
@@ -107,6 +114,7 @@ func (s *Client) CompletionMessages(ctx context.Context, in *CompletionMessagesR
 func (s *Client) ChatMessages(ctx context.Context, in *ChatMessagesRequest) (*ChatMessagesResponse, error) {
 	var out ChatMessagesResponse
 	res, err := s.httpClient.R().
+		SetHeader("Authorization", in.APIKey).
 		SetContext(ctx).
 		SetBody(in).
 		SetResult(&out).
@@ -127,6 +135,7 @@ func (s *Client) Upload(ctx context.Context, in *UploadFileRequest) (*UploadFile
 
 	var out UploadFileResponse
 	_, err = s.httpClient.R().
+		SetHeader("Authorization", in.APIKey).
 		SetContext(ctx).
 		SetFileReader("file", in.FilePath, bytes.NewReader(profileImgBytes)).
 		SetFormData(map[string]string{
