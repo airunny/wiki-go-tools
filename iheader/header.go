@@ -10,7 +10,7 @@ const (
 	ResponseContentJsonType       = "application/json"                // json 数据
 	ResponseContentTextType       = "text/plain"                      // 文本数据
 	TraceIdHeaderKey              = "X-Trace-Id"                      // 链路追踪ID
-	TokenHeaderKey                = "X-Token"                         // 用户token
+	TokenHeaderKey                = "X-Symbol"                        // 用户token
 	ForwardForHeaderKey           = "X-Forwarded-For"                 // 客户端ip
 	XRealIpHeaderKey              = "X-Real-Ip"                       // 客户端IP
 	UserIdHeaderKey               = "X-User-Id"                       // 用户ID

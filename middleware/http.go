@@ -20,7 +20,7 @@ import (
 
 var (
 	allowOrigins = []string{"*"}
-	allowHeaders = []string{"X-Token", "Authorization", "Content-Type", "X-User-Id"}
+	allowHeaders = []string{"X-Symbol", "Authorization", "Content-Type", "X-User-Id"}
 	allowMethods = []string{"GET", "POST", "PUT", "HEAD", "OPTIONS", "DELETE"}
 )
 

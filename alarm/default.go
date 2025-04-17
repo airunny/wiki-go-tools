@@ -42,6 +42,12 @@ func FeiShuAlarmNow(reqId string, msg string, opts ...Option) {
 	}
 }
 
+func FeiShuSendMessage(msg string) {
+	if defaultAlarm != nil {
+		defaultAlarm.SendMessage(msg)
+	}
+}
+
 func Close() {
 	if defaultAlarm != nil {
 		defaultAlarm.Close()

@@ -83,7 +83,7 @@ func TestValid(t *testing.T) {
 	})
 	assert.Nil(t, err)
 	assert.NotEqual(t, "", token)
-	fmt.Println("Token:", token)
+	fmt.Println("Symbol:", token)
 
 	acc, err := jwt.ParseToken(token)
 	assert.Nil(t, err)

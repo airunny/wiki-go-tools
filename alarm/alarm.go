@@ -173,6 +173,15 @@ func (a *Alarm) Alarm(reqId string, msg string) {
 	}()
 }
 
+func (a *Alarm) SendMessage(msg string) {
+	_, err := a.httpClient.R().
+		SetBody(a.Body(msg)).
+		Post(a.cfg.Webhook)
+	if err != nil {
+		log.Errorf("Alarm:%v", msg)
+	}
+}
+
 func (a *Alarm) AlarmNow(reqId string, msg string, opts ...Option) {
 	o := &option{}
 	for _, opt := range opts {
