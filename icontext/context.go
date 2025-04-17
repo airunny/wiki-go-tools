@@ -21,6 +21,7 @@ const (
 	requestIdKey               = "RequestId"                 // req id
 	userIdKey                  = "X-User-Id"                 // 用户ID
 	wscKey                     = "Route-Wsc-Val"             // wsc
+	sessionAppIdKey            = "AppId"                     // 应用ID
 )
 
 type Platform string
@@ -170,6 +171,16 @@ func WithClientMac(ctx context.Context, in string) context.Context {
 
 func ClientMacFrom(ctx context.Context) (string, bool) {
 	return fromValue(ctx, clientMac)
+}
+
+// appId
+
+func WithSessionAppId(ctx context.Context, in string) context.Context {
+	return withValue(ctx, sessionAppIdKey, in)
+}
+
+func SessionAppIdFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, sessionAppIdKey)
 }
 
 // context
