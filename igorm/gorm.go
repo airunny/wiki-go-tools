@@ -194,6 +194,18 @@ func typeFromModel(model interface{}) reflect.Type {
 	return typ
 }
 
+type CustomValue[T any] struct {
+	V T `json:"v"`
+}
+
+func (s *CustomValue[T]) Value() (driver.Value, error) {
+	return GormCustomValue(s)
+}
+
+func (s *CustomValue[T]) Scan(value interface{}) error {
+	return GormCustomScan(s, value)
+}
+
 func GormCustomValue(in interface{}) (driver.Value, error) {
 	if in == nil {
 		return "", nil
