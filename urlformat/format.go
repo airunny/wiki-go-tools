@@ -23,11 +23,11 @@ func SetFormat(in Format) {
 	globalFormat = in
 }
 
-func FullPath(image string) string {
+func FullPath(image string, opts ...Option) string {
 	if image == "" {
 		return ""
 	}
-	return globalFormat.FullPath(image)
+	return globalFormat.FullPath(image, opts...)
 }
 
 var (
