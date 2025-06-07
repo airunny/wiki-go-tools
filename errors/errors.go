@@ -10,7 +10,9 @@ var (
 	ErrAccessTokenExpired  = errors.New(400, "ACCESS_TOKEN_EXPIRED", "token expired")
 	ErrLogin               = errors.New(401, "UNAUTHORIZED", "not auth")
 	ErrUserOperation       = errors.New(402, "USER_OPERATION", "try again later")
+	ErrOutOfStock          = errors.New(403, "OUT_OF_STOCK", "out of stock")
 	ErrResourceNotFound    = errors.New(404, "RESOURCE_NOT_FOUND", "resource not found")
+	ErrPriceChanged        = errors.New(405, "PRICE_CHANGED", "price changed")
 	ErrInternalServer      = errors.New(500, "INTERNAL_SERVER_ERROR", "internal server err")
 )
 
