@@ -13,6 +13,7 @@ var (
 	ErrOutOfStock          = errors.New(403, "OUT_OF_STOCK", "out of stock")
 	ErrResourceNotFound    = errors.New(404, "RESOURCE_NOT_FOUND", "resource not found")
 	ErrPriceChanged        = errors.New(405, "PRICE_CHANGED", "price changed")
+	ErrSellOut             = errors.New(406, "SELL_OUT", "sell out")
 	ErrInternalServer      = errors.New(500, "INTERNAL_SERVER_ERROR", "internal server err")
 )
 
