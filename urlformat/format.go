@@ -64,7 +64,7 @@ func (f *format) FullPath(image string, opts ...Option) string {
 		image = fmt.Sprintf("%v%v", f.domain, image)
 	}
 
-	if o.template != "" {
+	if o.template != "" && !strings.HasSuffix(image, o.template) {
 		image = fmt.Sprintf("%v%v", image, o.template)
 	}
 	return image
