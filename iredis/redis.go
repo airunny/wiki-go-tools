@@ -14,6 +14,7 @@ type Config struct {
 	MasterName      string      `json:"master_name" yaml:"masterName" env:"DP_REDIS_DB_MASTER_NAME"`
 	SentinelAddress []string    `json:"sentinel_address" yaml:"sentinelAddress" env:"DP_REDIS_DB_SENTINEL_ADDRESS"`
 	Address         string      `json:"address" yaml:"address" env:"DP_REDIS_DB_SOURCE"`
+	Username        string      `json:"username" yaml:"username"`
 	Password        string      `json:"password" yaml:"password" env:"DP_REDIS_DB_PASSWORD"`
 	DB              int         `json:"db" yaml:"db" env:"DP_REDIS_DB_NUMBER"`
 	MaxIdle         int         `json:"max_idle" yaml:"max_idle" env:"DP_REDIS_DB_MAX_IDLE"`
@@ -52,6 +53,7 @@ func NewClient(cfg *Config, l log.Logger) (*redis.Client, error) {
 			DB:        cfg.DB,
 			PoolSize:  cfg.MaxIdle,
 			TLSConfig: cfg.TLSConfig,
+			Username:  cfg.Username,
 		})
 	}
 
