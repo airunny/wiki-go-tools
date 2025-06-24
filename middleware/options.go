@@ -13,6 +13,11 @@ type TextPlainReply interface {
 	StringReply() string
 }
 
+type CustomReply interface {
+	Body() []byte
+	ContentType() string
+}
+
 type Options struct {
 	convert CountryCodeConvert
 }

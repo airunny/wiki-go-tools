@@ -127,6 +127,15 @@ func ResponseEncoder(w http.ResponseWriter, r *stdHttp.Request, v interface{}) e
 		return nil
 	}
 
+	if res, ok := v.(CustomReply); ok {
+		w.Header().Set("Content-Type", res.ContentType())
+		_, err := w.Write(res.Body())
+		if err != nil {
+			w.WriteHeader(stdHttp.StatusInternalServerError)
+		}
+		return nil
+	}
+
 	WriteResponse(w, r, ResponseWithData(v))
 	return nil
 }
