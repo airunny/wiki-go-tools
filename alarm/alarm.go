@@ -32,11 +32,11 @@ type Config struct {
 
 func NewAlarm(c *Config) (*Alarm, error) {
 	if c.Delay <= 0 {
-		c.Delay = time.Minute * 2
+		c.Delay = time.Second * 10
 	}
 
 	if c.NoDelayCount <= 0 {
-		c.NoDelayCount = 10
+		c.NoDelayCount = 3
 	}
 
 	if c.ENV == "" {
@@ -217,10 +217,17 @@ func (a *Alarm) send(in []*message) {
 	dur := time.Now().Sub(a.sendTime)
 	a.sendTime = time.Now()
 
-	var (
-		title    = fmt.Sprintf("[%s][%v]%v时间内有%v条报警消息", a.cfg.ServiceName, strings.ToUpper(a.cfg.ENV), dur, len(in))
-		contents []string
-	)
+	title := ""
+	if a.cfg.ServiceName != "" {
+		title += fmt.Sprintf("[%s]", a.cfg.ServiceName)
+	}
+
+	if a.cfg.ENV != "" {
+		title += fmt.Sprintf("[%s]", strings.ToUpper(a.cfg.ENV))
+	}
+
+	title += fmt.Sprintf("%v时间内有%v条报警消息", dur, len(in))
+	var contents []string
 
 	for _, item := range in {
 		contents = append(contents, fmt.Sprintf("[%v]%v", item.RequestId, item.Message))
