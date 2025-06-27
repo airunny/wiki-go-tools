@@ -15,6 +15,7 @@ var (
 	ErrPriceChanged        = errors.New(405, "PRICE_CHANGED", "price changed")
 	ErrSellOut             = errors.New(406, "SELL_OUT", "sell out")
 	ErrGoodsOff            = errors.New(407, "GOODS_OFF", "goods off")
+	ErrBuyLimit            = errors.New(408, "BUY_LIMIT", "buy limit")
 	ErrInternalServer      = errors.New(500, "INTERNAL_SERVER_ERROR", "internal server err")
 )
 
