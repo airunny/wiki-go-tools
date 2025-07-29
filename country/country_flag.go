@@ -13,6 +13,7 @@ var (
 	flagCodeMapping      map[string]*countryFlag
 	flagTwoCharMapping   map[string]*countryFlag
 	flagThreeCharMapping map[string]*countryFlag
+	flagAreaCodeMapping  map[string]*countryFlag
 
 	ErrCountryNotFound = errors.New("country not found")
 	ErrEmptyFlagData   = errors.New("country flag data not loaded")
@@ -34,12 +35,22 @@ func init() {
 		return
 	}
 
-	flagFileName := os.Getenv("COUNTRY_FLAG_FILE_NAME")
-	if flagFileName == "" {
-		flagFileName = "countryFlag.json"
+	var filePath string
+
+	// 检查 flagPath 是否是一个文件
+	if info, err := os.Stat(flagPath); err == nil && !info.IsDir() {
+		// 如果是文件，直接使用
+		filePath = flagPath
+	} else {
+		// 如果是目录，拼接文件名
+		flagFileName := os.Getenv("COUNTRY_FLAG_FILE_NAME")
+		if flagFileName == "" {
+			flagFileName = "countryFlag.json"
+		}
+		filePath = path.Join(flagPath, flagFileName)
 	}
 
-	err := loadCountryFlagData(path.Join(flagPath, flagFileName))
+	err := loadCountryFlagData(filePath)
 	if err != nil {
 		panic(err)
 	}
@@ -64,10 +75,24 @@ func initFlagMappings() {
 	flagCodeMapping = make(map[string]*countryFlag, len(countryFlagData))
 	flagTwoCharMapping = make(map[string]*countryFlag, len(countryFlagData))
 	flagThreeCharMapping = make(map[string]*countryFlag, len(countryFlagData))
+	flagAreaCodeMapping = make(map[string]*countryFlag, len(countryFlagData))
 
 	// 先建立国家码到旗帜数据的映射
 	for i := range countryFlagData {
 		flag := &countryFlagData[i]
+
+		if flag.AreaCode != "" {
+			areaCode := strings.TrimSpace(flag.AreaCode)
+			flagAreaCodeMapping[areaCode] = flag
+
+			if strings.HasPrefix(areaCode, "00") {
+				flagAreaCodeMapping[areaCode[2:]] = flag
+			}
+
+			if strings.HasPrefix(areaCode, "+") {
+				flagAreaCodeMapping[areaCode[1:]] = flag
+			}
+		}
 
 		if flag.CountryCode != "" {
 			flagCodeMapping[flag.CountryCode] = flag
@@ -76,6 +101,7 @@ func initFlagMappings() {
 		if flag.TwoCharCode != "" {
 			flagTwoCharMapping[strings.ToUpper(flag.TwoCharCode)] = flag
 		}
+
 	}
 
 	// 利用现有的三字码映射建立三字码到旗帜数据的映射
@@ -87,14 +113,14 @@ func initFlagMappings() {
 }
 
 // GetCountryInfo 根据语言代码和国家代码获取国家名称和旗帜URL
-// 支持二字码、三字码、数字国家码，语言不存在时回退到英语
-func GetCountryInfo(langCode LangCode, countryCode string) (countryName string, flagURL string, err error) {
+// 支持二字码、三字码、数字国家码、区号，语言不存在时回退到英语
+func GetCountryInfo(langCode LangCode, code string) (countryName string, flagURL string, err error) {
 	if len(countryFlagData) == 0 {
 		err = ErrEmptyFlagData
 		return
 	}
 
-	flag := findCountryFlag(countryCode)
+	flag := findCountryFlag(code)
 	if flag == nil {
 		err = ErrCountryNotFound
 		return
@@ -111,6 +137,7 @@ func findCountryFlag(countryCode string) *countryFlag {
 		return nil
 	}
 
+	// 按优先级查找：数字国家码 > 二字码 > 三字码 > 区号
 	if flag, ok := flagCodeMapping[code]; ok {
 		return flag
 	}
@@ -121,6 +148,24 @@ func findCountryFlag(countryCode string) *countryFlag {
 
 	if flag, ok := flagThreeCharMapping[code]; ok {
 		return flag
+	}
+
+	// 查找区号（保持原始大小写，因为区号通常包含数字和符号）
+	originalCode := strings.TrimSpace(countryCode)
+	if flag, ok := flagAreaCodeMapping[originalCode]; ok {
+		return flag
+	}
+
+	// 尝试添加常见的区号前缀进行查找
+	if !strings.HasPrefix(originalCode, "+") && !strings.HasPrefix(originalCode, "00") {
+		// 尝试添加 "+" 前缀
+		if flag, ok := flagAreaCodeMapping["+"+originalCode]; ok {
+			return flag
+		}
+		// 尝试添加 "00" 前缀
+		if flag, ok := flagAreaCodeMapping["00"+originalCode]; ok {
+			return flag
+		}
 	}
 
 	return nil
