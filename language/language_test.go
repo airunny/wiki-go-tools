@@ -213,3 +213,11 @@ func TestConvert(t *testing.T) {
 	dStr, _ := json.Marshal(d)
 	fmt.Println(string(dStr))
 }
+
+func Test0021(t *testing.T) {
+	for key, value := range iso6392BMapping {
+		if value.Code == "" {
+			fmt.Println(key)
+		}
+	}
+}
