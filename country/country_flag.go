@@ -20,14 +20,12 @@ var (
 )
 
 type countryFlag struct {
-	TwoCharCode string              `json:"two_char_code"`
-	CountryCode string              `json:"country_code"`
-	AreaCode    string              `json:"area_code"`
-	FlagURL     string              `json:"flag_url"`
-	CountryName map[LangCode]string `json:"country_name"`
+	TwoCharCode string            `json:"two_char_code"`
+	CountryCode string            `json:"country_code"`
+	AreaCode    string            `json:"area_code"`
+	FlagURL     string            `json:"flag_url"`
+	CountryName map[string]string `json:"country_name"`
 }
-
-type LangCode string
 
 func init() {
 	flagPath := os.Getenv("COUNTRY_FLAG_PATH")
@@ -112,12 +110,45 @@ func initFlagMappings() {
 	}
 }
 
+func GetCountryInfoWithUserCountry(languageCode, countryCode, userCountryCode string) (countryName string, flagURL string, err error) {
+	country, ok := GetCountryByCode(countryCode)
+	if !ok {
+		err = ErrCountryNotFound
+		return
+	}
+	countryCode = country.CountryCode
+
+	userCountry, ok := GetCountryByCode(userCountryCode)
+	if !ok {
+		err = ErrCountryNotFound
+		return
+	}
+	userCountryCode = userCountry.CountryCode
+
+	if countryCode == "156" {
+		countryCode = "344"
+	}
+
+	flag := findCountryFlag(countryCode)
+	if flag == nil {
+		err = ErrCountryNotFound
+		return
+	}
+
+	flagURL = flag.FlagURL
+	countryName = getCountryNameByLang(flag, languageCode)
+	if userCountryCode == "156" {
+		countryName, ok = hongkongNameMapping[languageCode]
+		if !ok {
+			countryName = hongkongNameMapping["en"]
+		}
+	}
+	return
+}
+
 // GetCountryInfo 根据语言代码和国家代码获取国家名称和旗帜URL
 // 支持二字码、三字码、数字国家码、区号，语言不存在时回退到英语
-func GetCountryInfo(langCode LangCode, code string) (countryName string, flagURL string, err error) {
-	if code == "156" {
-		code = "344"
-	}
+func GetCountryInfo(langCode, code string) (countryName string, flagURL string, err error) {
 	if len(countryFlagData) == 0 {
 		err = ErrEmptyFlagData
 		return
@@ -174,7 +205,7 @@ func findCountryFlag(countryCode string) *countryFlag {
 	return nil
 }
 
-func getCountryNameByLang(flag *countryFlag, langCode LangCode) string {
+func getCountryNameByLang(flag *countryFlag, langCode string) string {
 	if flag == nil || flag.CountryName == nil {
 		return ""
 	}
@@ -190,7 +221,7 @@ func getCountryNameByLang(flag *countryFlag, langCode LangCode) string {
 	return ""
 }
 
-func GetCountryName(langCode LangCode, countryCode string) (string, error) {
+func GetCountryName(langCode string, countryCode string) (string, error) {
 	countryName, _, err := GetCountryInfo(langCode, countryCode)
 	return countryName, err
 }
@@ -204,19 +235,19 @@ func IsCountryCodeValid(countryCode string) bool {
 	return findCountryFlag(countryCode) != nil
 }
 
-func GetAllSupportedLanguages() []LangCode {
+func GetAllSupportedLanguages() []string {
 	if len(countryFlagData) == 0 {
 		return nil
 	}
 
-	langSet := make(map[LangCode]bool)
+	langSet := make(map[string]bool)
 	for _, flag := range countryFlagData {
 		for langCode := range flag.CountryName {
 			langSet[langCode] = true
 		}
 	}
 
-	languages := make([]LangCode, 0, len(langSet))
+	languages := make([]string, 0, len(langSet))
 	for langCode := range langSet {
 		languages = append(languages, langCode)
 	}
@@ -224,7 +255,7 @@ func GetAllSupportedLanguages() []LangCode {
 	return languages
 }
 
-func GetCountryInfoBatch(langCode LangCode, countryCodes []string) map[string]struct {
+func GetCountryInfoBatch(langCode string, countryCodes []string) map[string]struct {
 	CountryName string
 	FlagURL     string
 	Error       error

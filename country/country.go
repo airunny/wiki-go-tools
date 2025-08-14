@@ -1040,6 +1040,30 @@ var (
 		"93609133": "其他区",
 		"999":      "全球",
 	}
+	// 64070
+	hongkongNameMapping = map[string]string{
+		"ar":    "هونغ كونغ، الصين",
+		"de":    "HongKong, China",
+		"en":    "Hong Kong, China",
+		"es":    "Hong Kong, China",
+		"fil":   "Hong Kong China",
+		"fr":    "Hong-Kong Chine",
+		"hi":    "हांगकांग चीन",
+		"id":    "Cina Hongkong",
+		"it":    "Hong Kong Cina",
+		"ja":    "香港中国",
+		"ko":    "중국 홍콩",
+		"ms":    "Hong Kong China",
+		"pt":    "Hong Kong China",
+		"ru":    "Гонконг Китай",
+		"th":    "ฮ่องกง จีน",
+		"tr":    "Hong Kong, Çin",
+		"vi":    "Hồng Kông, Trung Quốc",
+		"zh":    "中國香港",
+		"zh-cn": "中国香港",
+		"zh-hk": "中國香港",
+		"zh-tw": "中國香港",
+	}
 )
 
 // GetAreaCodeByCode 同时兼容 二字码、三字码、CountryCode
