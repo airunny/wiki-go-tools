@@ -115,6 +115,9 @@ func initFlagMappings() {
 // GetCountryInfo 根据语言代码和国家代码获取国家名称和旗帜URL
 // 支持二字码、三字码、数字国家码、区号，语言不存在时回退到英语
 func GetCountryInfo(langCode LangCode, code string) (countryName string, flagURL string, err error) {
+	if code == "156" {
+		code = "344"
+	}
 	if len(countryFlagData) == 0 {
 		err = ErrEmptyFlagData
 		return
