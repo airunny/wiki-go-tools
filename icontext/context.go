@@ -22,6 +22,7 @@ const (
 	userIdKey                  = "X-User-Id"                 // 用户ID
 	wscKey                     = "Route-Wsc-Val"             // wsc
 	sessionAppIdKey            = "AppId"                     // 应用ID
+	xPWX                       = "X-Pwa"
 )
 
 type Platform string
@@ -183,6 +184,16 @@ func SessionAppIdFrom(ctx context.Context) (string, bool) {
 	return fromValue(ctx, sessionAppIdKey)
 }
 
+// x-pwa
+
+func WithXPWA(ctx context.Context, in string) context.Context {
+	return withValue(ctx, xPWX, in)
+}
+
+func XPWAFrom(ctx context.Context) (string, bool) {
+	return fromValue(ctx, xPWX)
+}
+
 // context
 
 func LoggerValues() []interface{} {
@@ -230,6 +241,10 @@ func LoggerValues() []interface{} {
 		"wsc", log.Valuer(func(ctx context.Context) interface{} {
 			value, _ := WSCFrom(ctx)
 			return value
+		}),
+		"client_ip", log.Valuer(func(ctx context.Context) interface{} {
+			clientIp, _ := ClientIPFrom(ctx)
+			return clientIp
 		}),
 		"namespace", log.Valuer(func(ctx context.Context) interface{} {
 			return os.Getenv("NAMESPACE")

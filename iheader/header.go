@@ -26,6 +26,7 @@ const (
 	PreferredLanguageHeaderKey    = "X-Preferred-DeviceLanguage-Code" // 偏好语言
 	SceneCodeKey                  = "SceneCode"                       // scene code
 	WSCKey                        = "Route_wsc_val"
+	XPWA                          = "X-Pwa"
 )
 
 func GetToken(h transport.Header) string {
@@ -44,6 +45,10 @@ func GetClientIp(h transport.Header) string {
 		return splits[0]
 	}
 	return ""
+}
+
+func GetXPwa(h transport.Header) string {
+	return h.Get(XPWA)
 }
 
 func GetRouteWSC(h transport.Header) string {
