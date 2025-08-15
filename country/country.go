@@ -1146,3 +1146,13 @@ func GetTwoCharCodeByAreaName(name string) []string {
 	}
 	return twoCharCodes
 }
+
+func GetByCountryName(name string) (*Country, bool) {
+	name = strings.ToUpper(name)
+	for _, country := range countryCodeMapping {
+		if strings.ToUpper(country.EnglishCountryName) == name || strings.ToUpper(country.ChineseCountryName) == name {
+			return country, true
+		}
+	}
+	return nil, false
+}
