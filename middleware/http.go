@@ -96,6 +96,8 @@ func TryParseHeader(opts ...Option) middleware.Middleware {
 			ctx = icontext.WithWikiDataCenterRequestId(ctx, iheader.GetWikiDataCenterRequestId(header))
 			// scene code
 			ctx = icontext.WithSceneCode(ctx, iheader.GetSceneCode(header))
+			// x-pwa
+			ctx = icontext.WithXPWA(ctx, iheader.GetXPwa(header))
 			// wsc
 			wscValue := iheader.GetRouteWSC(header)
 			ctx = icontext.WithWSC(ctx, wscValue)
