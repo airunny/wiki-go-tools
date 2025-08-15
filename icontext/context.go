@@ -246,6 +246,10 @@ func LoggerValues() []interface{} {
 			clientIp, _ := ClientIPFrom(ctx)
 			return clientIp
 		}),
+		"x-pwa", log.Valuer(func(ctx context.Context) interface{} {
+			xPwa, _ := XPWAFrom(ctx)
+			return xPwa
+		}),
 		"namespace", log.Valuer(func(ctx context.Context) interface{} {
 			return os.Getenv("NAMESPACE")
 		}),
