@@ -137,7 +137,8 @@ func GetCountryInfoWithUserCountry(languageCode, countryCode, userCountryCode st
 
 	flagURL = flag.FlagURL
 	countryName = getCountryNameByLang(flag, languageCode)
-	if userCountryCode == "156" {
+	// 如果用户在中国，且业务实在香港
+	if userCountryCode == "156" && countryCode == "344" {
 		countryName, ok = hongkongNameMapping[languageCode]
 		if !ok {
 			countryName = hongkongNameMapping["en"]
