@@ -125,10 +125,6 @@ func GetCountryInfoWithUserCountry(languageCode, countryCode, userCountryCode st
 	}
 	userCountryCode = userCountry.CountryCode
 
-	if countryCode == "156" {
-		countryCode = "344"
-	}
-
 	flag := findCountryFlag(countryCode)
 	if flag == nil {
 		err = ErrCountryNotFound
