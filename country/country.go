@@ -1064,6 +1064,29 @@ var (
 		"zh-hk": "中國香港",
 		"zh-tw": "中國香港",
 	}
+	taiwanNameMapping = map[string]string{
+		"ar":    "تايوان",
+		"de":    "Taiwan",
+		"en":    "Taiwan",
+		"es":    "Taiwan",
+		"fil":   "Taiwan",
+		"fr":    "Taïwan",
+		"hi":    "ताइवान",
+		"id":    "Taiwan",
+		"it":    "Taiwan",
+		"ja":    "台湾部門",
+		"ko":    "대만",
+		"ms":    "Taiwan",
+		"pt":    "Taiwan(China)",
+		"ru":    "Тайвань",
+		"th":    "ไต้หวัน",
+		"tr":    "Tayvan",
+		"vi":    "Khu vực Đài Loan",
+		"zh":    "中國台灣",
+		"zh-cn": "中国台湾",
+		"zh-hk": "中國台灣",
+		"zh-tw": "中國台灣",
+	}
 )
 
 // GetAreaCodeByCode 同时兼容 二字码、三字码、CountryCode

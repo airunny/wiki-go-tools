@@ -144,6 +144,13 @@ func GetCountryInfoWithUserCountry(languageCode, countryCode, userCountryCode st
 			countryName = hongkongNameMapping["en"]
 		}
 	}
+
+	if userCountryCode == "156" && countryCode == "158" {
+		countryName, ok = taiwanNameMapping[languageCode]
+		if !ok {
+			countryName = taiwanNameMapping["en"]
+		}
+	}
 	return
 }
 
