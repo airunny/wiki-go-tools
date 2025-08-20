@@ -117,6 +117,10 @@ func GetCountryInfoWithUserCountry(languageCode, countryCode, userCountryCode st
 		return
 	}
 	countryCode = country.CountryCode
+	// 将中国变成中国香港
+	if countryCode == "156" {
+		countryCode = "344"
+	}
 
 	userCountry, ok := GetCountryByCode(userCountryCode)
 	if !ok {
