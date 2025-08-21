@@ -74,19 +74,19 @@ func (l *logger) Trace(ctx context.Context, begin time.Time, fc func() (sql stri
 		if errors.Is(err, gorm.ErrRecordNotFound) && strings.HasPrefix(sql, "SELECT") {
 			ll.Infow("duration", fmt.Sprintf("%v", elapsed),
 				"rows", rows,
-				"sql", sql)
+				"msg", sql)
 			return
 		}
 		ll.Errorw("duration", fmt.Sprintf("%v", elapsed),
 			"rows", rows,
-			"sql", sql)
+			"msg", sql)
 	case l.SlowThreshold != 0 && elapsed > l.SlowThreshold && l.level >= gormlogger.Warn:
 		ll.Warnw("duration", fmt.Sprintf("%v", elapsed),
 			"rows", rows,
-			"sql", sql)
+			"msg", sql)
 	case l.level >= gormlogger.Info:
 		ll.Infow("duration", fmt.Sprintf("%v", elapsed),
 			"rows", rows,
-			"sql", sql)
+			"msg", sql)
 	}
 }
