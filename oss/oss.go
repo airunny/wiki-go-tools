@@ -17,7 +17,7 @@ import (
 
 const (
 	defaultPolicy             = `{"Statement":[{"Action":["oss.PutObject"],"Effect":"Allow","Resource":["acs:oss:*:1624820479181668:wkstock-dev/*","acs:oss:*:1624820479181668:wkstock-pro/*"]}],"Version":"1"}` // nolint
-	dateLayout                = "2006/01/02"
+	dateLayout                = "20060102"
 	defaultSTSDurationSeconds = 3600
 	defaultRoleSessionName    = "wkstock-oss-sts"
 )
