@@ -23,15 +23,15 @@ const (
 )
 
 type Config struct {
-	Bucket             string
-	Endpoint           string
-	AccessKeyID        string
-	AccessKeySecret    string
-	RoleArn            string
-	Policy             string
-	CDNHost            string
-	RoleSessionName    string
-	STSDurationSeconds int
+	Bucket             string `json:"bucket"`
+	Endpoint           string `json:"endpoint"`
+	AccessKeyID        string `json:"access_key_id"`
+	AccessKeySecret    string `json:"access_key_secret"`
+	RoleArn            string `json:"role_arn"`
+	Policy             string `json:"policy"`
+	CDNHost            string `json:"cdn_host"`
+	RoleSessionName    string `json:"role_session_name"`
+	STSDurationSeconds int    `json:"sts_duration_seconds"`
 }
 
 func NewClient(c *Config) (*Client, error) {
