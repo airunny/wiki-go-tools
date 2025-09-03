@@ -1136,6 +1136,14 @@ func GetAreaNameByAreaCode(code string) string {
 	return "其他区"
 }
 
+func GetAreaByCode(code string) (string, bool) {
+	out, ok := areaNameMapping[code]
+	if ok {
+		return out, true
+	}
+	return "", false
+}
+
 // GetTwoCharCodeByAreaName 根据区域名称获取该区域下面的所有国家二字码
 func GetTwoCharCodeByAreaName(name string) []string {
 	var areaCode string
