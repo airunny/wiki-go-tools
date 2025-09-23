@@ -215,9 +215,6 @@ func TestConvert(t *testing.T) {
 }
 
 func Test0021(t *testing.T) {
-	for key, value := range iso6392BMapping {
-		if value.Code == "" {
-			fmt.Println(key)
-		}
-	}
+	str, _ := json.Marshal(codeMapping)
+	fmt.Println(string(str))
 }
