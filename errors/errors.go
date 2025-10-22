@@ -17,6 +17,7 @@ var (
 	ErrGoodsOff            = errors.New(407, "GOODS_OFF", "goods off")
 	ErrBuyLimit            = errors.New(408, "BUY_LIMIT", "buy limit")
 	ErrNotSupportDeliver   = errors.New(409, "NOT_SUPPORT_DELIVER", "address does not support delivery")
+	ErrToManyRequests      = errors.New(429, "TOO_MANY_REQUEST", "too many request")
 	ErrInternalServer      = errors.New(500, "INTERNAL_SERVER_ERROR", "internal server err")
 )
 
